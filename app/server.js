@@ -89,6 +89,52 @@ app.get('/api/summary', (req, res) => {
   });
 });
 
+// GET /api/events: Real-time SRE incident and check audit stream
+app.get('/api/events', (req, res) => {
+  res.status(200).json(checker.getEventLogs());
+});
+
+// POST /api/webhook/test: Manually trigger a test alert to Discord/Slack
+app.post('/api/webhook/test', async (req, res) => {
+  const webhookUrl = process.env.ALERT_WEBHOOK_URL;
+  if (!webhookUrl || typeof webhookUrl !== 'string' || webhookUrl.trim() === '') {
+    return res.status(400).json({
+      success: false,
+      error: 'ALERT_WEBHOOK_URL is not configured on this container. Set it via Jenkins credential or Docker -e.'
+    });
+  }
+
+  try {
+    await checker.sendWebhookAlert(
+      'TEST ALERT: PulseOps Sentinel webhook integration is live and operational!',
+      '🧪 Webhook Test Notification',
+      'green',
+      [
+        { name: 'Environment', value: 'Production (Docker Host)', inline: true },
+        { name: 'CI/CD Build', value: `#${BUILD_NUMBER}`, inline: true },
+        { name: 'Engine Status', value: 'All systems operational', inline: true }
+      ]
+    );
+    res.status(200).json({ success: true, message: 'Test alert sent successfully to Discord/Slack!' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Demo Helper: GET /api/mock/slow - Simulates high latency SLA breach
+app.get('/api/mock/slow', async (req, res) => {
+  await new Promise((resolve) => setTimeout(resolve, 2200));
+  res.status(200).json({ status: 'ok', message: 'Delayed response (2200ms) for SLA testing' });
+});
+
+// Demo Helper: GET /api/mock/silent-fail - Simulates silent 200 OK failure missing keyword
+app.get('/api/mock/silent-fail', (req, res) => {
+  res.status(200).json({
+    status: 'corrupted',
+    error: 'Silent backend malfunction: database pool exhausted'
+  });
+});
+
 // Demo Helper: GET /api/mock/target - Mock endpoint to simulate live outages in demos
 app.get('/api/mock/target', (req, res) => {
   if (mockHealthy) {

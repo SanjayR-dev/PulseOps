@@ -3,47 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PulseOps Sentinel | Automated Uptime & SSL Watchdog</title>
+  <title>PulseOps Sentinel • SRE Command Center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b0f19;
-      --card-bg: rgba(22, 30, 46, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --text-main: #f3f4f6;
+      --bg: #07090e;
+      --surface-1: rgba(18, 24, 38, 0.7);
+      --surface-2: rgba(26, 35, 54, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.4);
+      --text: #f8fafc;
       --text-muted: #94a3b8;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #38bdf8;
       --success: #10b981;
-      --success-glow: rgba(16, 185, 129, 0.25);
+      --success-bg: rgba(16, 185, 129, 0.12);
       --warning: #f59e0b;
-      --warning-glow: rgba(245, 158, 11, 0.25);
-      --danger: #ef4444;
-      --danger-glow: rgba(239, 68, 68, 0.25);
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --danger: #f43f5e;
+      --danger-bg: rgba(244, 63, 94, 0.12);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
-      color: var(--text-main);
+        radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.12) 0, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(56, 189, 248, 0.08) 0, transparent 45%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     .container {
-      max-width: 1240px;
+      max-width: 1320px;
       margin: 0 auto;
       padding: 2rem 1.5rem;
       width: 100%;
@@ -56,34 +58,35 @@
       justify-content: space-between;
       margin-bottom: 2rem;
       padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 1.25rem;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1rem;
     }
 
-    .brand-icon {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, #3b82f6, #10b981);
-      border-radius: 12px;
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #6366f1, #38bdf8);
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
-      box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+      font-size: 1.5rem;
+      box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .brand h1 {
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       font-weight: 800;
-      letter-spacing: -0.02em;
-      background: linear-gradient(120deg, #ffffff, #93c5fd);
+      letter-spacing: -0.03em;
+      background: linear-gradient(120deg, #ffffff 40%, #a5b4fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -91,34 +94,37 @@
     .brand p {
       font-size: 0.85rem;
       color: var(--text-muted);
+      margin-top: 0.15rem;
     }
 
-    .header-actions {
+    .header-ctrls {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.85rem;
+      flex-wrap: wrap;
     }
 
-    .pulse-badge {
-      display: flex;
+    .live-badge {
+      display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: rgba(16, 185, 129, 0.12);
+      background: rgba(16, 185, 129, 0.1);
       border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 0.4rem 0.85rem;
+      padding: 0.45rem 0.95rem;
       border-radius: 9999px;
       font-size: 0.82rem;
-      color: #34d399;
       font-weight: 600;
+      color: #34d399;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .pulse-dot {
+    .live-dot {
       width: 8px;
       height: 8px;
-      background: #10b981;
+      background: var(--success);
       border-radius: 50%;
-      box-shadow: 0 0 10px #10b981;
-      animation: pulse 2s infinite;
+      box-shadow: 0 0 12px var(--success);
+      animation: pulse 1.8s infinite;
     }
 
     @keyframes pulse {
@@ -126,40 +132,40 @@
       50% { opacity: 0.4; transform: scale(1.3); }
     }
 
-    .btn-refresh {
+    .btn-top {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 0.5rem 0.9rem;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.45rem 0.95rem;
       border-radius: 8px;
+      font-size: 0.82rem;
       font-weight: 600;
-      font-size: 0.85rem;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 0.4rem;
       transition: all 0.2s;
     }
 
-    .btn-refresh:hover {
+    .btn-top:hover {
       background: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.2);
     }
 
-    /* Summary Cards */
-    .summary-grid {
+    /* KPI Summary Cards */
+    .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.1rem;
       margin-bottom: 2rem;
     }
 
-    .summary-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(12px);
-      border-radius: 14px;
-      padding: 1.25rem;
+    .kpi-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      border-radius: 16px;
+      padding: 1.3rem 1.4rem;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -167,37 +173,75 @@
       transition: transform 0.2s, border-color 0.2s;
     }
 
-    .summary-card:hover {
+    .kpi-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.18);
     }
 
-    .card-title {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
+    .kpi-label {
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.4rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
     }
 
-    .card-value {
-      font-size: 2rem;
+    .kpi-value {
+      font-size: 2.2rem;
       font-weight: 800;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.04em;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .card-value.green { color: var(--success); }
-    .card-value.amber { color: var(--warning); }
-    .card-value.red { color: var(--danger); }
-    .card-value.blue { color: #60a5fa; }
+    .kpi-value.green { color: var(--success); }
+    .kpi-value.amber { color: var(--warning); }
+    .kpi-value.red { color: var(--danger); }
+    .kpi-value.blue { color: var(--accent); }
+    .kpi-value.purple { color: #c084fc; }
 
-    /* Demo Outage Simulator Banner */
-    .demo-bar {
-      background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(245, 158, 11, 0.15));
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 12px;
-      padding: 1rem 1.5rem;
+    /* Interactive Tabs Navigation */
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 0.6rem 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      color: #fff;
+      background: rgba(99, 102, 241, 0.18);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+    }
+
+    /* Fast Action Lab Banner */
+    .lab-banner {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(56, 189, 248, 0.08));
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
       margin-bottom: 2rem;
       display: flex;
       align-items: center;
@@ -206,74 +250,84 @@
       gap: 1rem;
     }
 
-    .demo-info {
+    .lab-info {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1rem;
     }
 
-    .demo-info span {
-      font-size: 1.3rem;
+    .lab-icon {
+      font-size: 1.8rem;
     }
 
-    .demo-title {
+    .lab-title {
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.98rem;
     }
 
-    .demo-subtitle {
-      font-size: 0.8rem;
+    .lab-desc {
+      font-size: 0.82rem;
       color: var(--text-muted);
+      margin-top: 0.15rem;
     }
 
-    .demo-actions {
+    .lab-buttons {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.65rem;
+      flex-wrap: wrap;
     }
 
-    .btn-demo {
-      padding: 0.5rem 0.9rem;
-      border-radius: 8px;
-      font-size: 0.82rem;
+    .btn-preset {
+      padding: 0.45rem 0.85rem;
+      border-radius: 7px;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
-      border: none;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
       transition: all 0.2s;
     }
 
-    .btn-demo-add {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-main);
-      border: 1px solid var(--card-border);
+    .btn-preset:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
-    .btn-demo-add:hover {
-      background: rgba(255, 255, 255, 0.18);
+    .btn-preset.danger {
+      background: rgba(244, 63, 94, 0.18);
+      color: #fda4af;
+      border-color: rgba(244, 63, 94, 0.35);
     }
 
-    .btn-demo-toggle {
-      background: #f59e0b;
-      color: #000;
+    .btn-preset.danger:hover {
+      background: rgba(244, 63, 94, 0.3);
     }
 
-    .btn-demo-toggle:hover {
-      background: #d97706;
+    .btn-preset.warning {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fde68a;
+      border-color: rgba(245, 158, 11, 0.35);
     }
 
-    /* Add Form */
-    .add-section {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
+    .btn-preset.warning:hover {
+      background: rgba(245, 158, 11, 0.3);
+    }
+
+    /* Add Target Card */
+    .add-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       padding: 1.5rem;
       margin-bottom: 2rem;
     }
 
-    .section-title {
-      font-size: 1.1rem;
+    .add-header {
+      font-size: 1.05rem;
       font-weight: 700;
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -281,61 +335,62 @@
 
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.1rem;
       align-items: flex-end;
     }
 
-    .form-group {
+    .input-group {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.45rem;
     }
 
-    .form-group label {
+    .input-group label {
       font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-muted);
     }
 
-    .form-control {
-      background: rgba(11, 15, 25, 0.7);
-      border: 1px solid var(--card-border);
+    .input-ctrl {
+      background: rgba(7, 9, 14, 0.7);
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 0.65rem 0.9rem;
-      color: var(--text-main);
+      color: var(--text);
       font-size: 0.9rem;
       font-family: inherit;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
 
-    .form-control:focus {
+    .input-ctrl:focus {
       border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
     }
 
-    .btn-primary {
+    .btn-submit {
       background: var(--primary);
       color: #fff;
       border: none;
       border-radius: 8px;
-      padding: 0.7rem 1.25rem;
+      padding: 0.7rem 1.4rem;
       font-weight: 700;
       font-size: 0.9rem;
       cursor: pointer;
+      height: 44px;
       transition: background-color 0.2s;
-      height: 42px;
     }
 
-    .btn-primary:hover {
+    .btn-submit:hover {
       background: var(--primary-hover);
     }
 
-    /* Services Table */
-    .table-container {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
+    /* Table */
+    .table-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       overflow-x: auto;
       margin-bottom: 3rem;
     }
@@ -347,44 +402,43 @@
     }
 
     th {
-      padding: 1rem 1.25rem;
-      font-size: 0.75rem;
+      padding: 1rem 1.3rem;
+      font-size: 0.74rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       color: var(--text-muted);
-      border-bottom: 1px solid var(--card-border);
-      background: rgba(11, 15, 25, 0.4);
+      border-bottom: 1px solid var(--border);
+      background: rgba(11, 15, 25, 0.6);
+      font-weight: 700;
     }
 
     td {
-      padding: 1.1rem 1.25rem;
-      border-bottom: 1px solid var(--card-border);
+      padding: 1.15rem 1.3rem;
+      border-bottom: 1px solid var(--border);
       font-size: 0.9rem;
       vertical-align: middle;
     }
 
-    tr:last-child td {
-      border-bottom: none;
-    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.015); }
 
-    .service-name {
+    .target-title {
       font-weight: 700;
       color: #fff;
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
+      gap: 0.25rem;
     }
 
-    .service-url {
+    .target-url {
       font-size: 0.78rem;
       color: var(--text-muted);
       font-family: 'JetBrains Mono', monospace;
       text-decoration: none;
-      word-break: break-all;
     }
 
-    .service-url:hover {
-      color: #93c5fd;
+    .target-url:hover {
+      color: var(--accent);
       text-decoration: underline;
     }
 
@@ -393,135 +447,189 @@
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.3rem 0.65rem;
+      padding: 0.35rem 0.75rem;
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.04em;
     }
 
     .badge-up {
-      background: rgba(16, 185, 129, 0.15);
+      background: var(--success-bg);
       color: #34d399;
       border: 1px solid rgba(16, 185, 129, 0.3);
     }
 
     .badge-degraded {
-      background: rgba(245, 158, 11, 0.15);
+      background: var(--warning-bg);
       color: #fbbf24;
       border: 1px solid rgba(245, 158, 11, 0.3);
     }
 
     .badge-down {
-      background: rgba(239, 68, 68, 0.15);
+      background: var(--danger-bg);
       color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      border: 1px solid rgba(244, 63, 94, 0.3);
     }
 
     .badge-pending {
-      background: rgba(148, 163, 184, 0.15);
+      background: rgba(148, 163, 184, 0.1);
       color: #cbd5e1;
-      border: 1px solid rgba(148, 163, 184, 0.3);
+      border: 1px solid rgba(148, 163, 184, 0.2);
     }
 
     /* SSL Pill */
-    .ssl-pill {
+    .ssl-tag {
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.35rem;
       font-size: 0.78rem;
       font-family: 'JetBrains Mono', monospace;
-      padding: 0.25rem 0.55rem;
+      padding: 0.3rem 0.65rem;
       border-radius: 6px;
+      font-weight: 600;
     }
 
-    .ssl-good {
-      background: rgba(16, 185, 129, 0.1);
+    .ssl-secure {
+      background: var(--success-bg);
       color: #34d399;
       border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
-    .ssl-warn {
-      background: rgba(245, 158, 11, 0.15);
+    .ssl-alert {
+      background: var(--warning-bg);
       color: #fbbf24;
       border: 1px solid rgba(245, 158, 11, 0.4);
     }
 
-    .ssl-none {
+    .ssl-plain {
       color: #64748b;
-      font-size: 0.75rem;
+      font-size: 0.76rem;
     }
 
-    /* History Sparkline */
-    .history-bars {
+    /* History Blocks */
+    .history-row {
       display: flex;
       align-items: center;
       gap: 3px;
     }
 
-    .bar {
+    .hist-block {
       width: 7px;
       height: 22px;
       border-radius: 2px;
       cursor: pointer;
-      transition: transform 0.1s;
+      transition: transform 0.15s;
     }
 
-    .bar:hover {
-      transform: scaleY(1.2);
-    }
+    .hist-block:hover { transform: scaleY(1.3); }
+    .hist-up { background: var(--success); }
+    .hist-degraded { background: var(--warning); }
+    .hist-down { background: var(--danger); }
+    .hist-empty { background: rgba(255, 255, 255, 0.08); }
 
-    .bar-up { background: var(--success); }
-    .bar-degraded { background: var(--warning); }
-    .bar-down { background: var(--danger); }
-    .bar-empty { background: rgba(255, 255, 255, 0.08); }
-
-    .btn-action {
+    /* Action Buttons */
+    .btn-act {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 0.4rem 0.65rem;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.45rem 0.7rem;
       border-radius: 6px;
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .btn-action:hover {
+    .btn-act:hover {
       background: rgba(255, 255, 255, 0.12);
     }
 
-    .btn-danger {
-      color: #f87171;
+    .btn-act.del { color: #f87171; }
+    .btn-act.del:hover {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: rgba(244, 63, 94, 0.4);
     }
 
-    .btn-danger:hover {
-      background: rgba(239, 68, 68, 0.15);
-      border-color: rgba(239, 68, 68, 0.3);
+    /* Audit Stream View */
+    .stream-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: none;
+    }
+
+    .stream-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-height: 540px;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    .log-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: rgba(7, 9, 14, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      gap: 1rem;
+    }
+
+    .log-item.success { border-left: 3px solid var(--success); }
+    .log-item.warning { border-left: 3px solid var(--warning); }
+    .log-item.danger { border-left: 3px solid var(--danger); }
+    .log-item.info { border-left: 3px solid var(--accent); }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 0.88rem;
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 9999;
+      animation: slideUp 0.25s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     /* Footer */
     footer {
       margin-top: auto;
-      border-top: 1px solid var(--card-border);
+      border-top: 1px solid var(--border);
       padding: 1.5rem;
       text-align: center;
       font-size: 0.85rem;
       color: var(--text-muted);
-      background: rgba(11, 15, 25, 0.6);
+      background: rgba(7, 9, 14, 0.7);
     }
 
-    .build-tag {
+    .build-badge {
       display: inline-block;
-      background: rgba(59, 130, 246, 0.15);
-      color: #93c5fd;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
       font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
+      font-weight: 700;
       margin-left: 0.4rem;
     }
   </style>
@@ -532,140 +640,182 @@
     <!-- Header -->
     <header>
       <div class="brand">
-        <div class="brand-icon">🛡️</div>
+        <div class="brand-logo">🛡️</div>
         <div>
           <h1>PulseOps Sentinel</h1>
           <p>Continuous Uptime, Content Integrity & SSL Expiry Watchdog</p>
         </div>
       </div>
-      <div class="header-actions">
-        <div class="pulse-badge">
-          <div class="pulse-dot"></div>
+      <div class="header-ctrls">
+        <div class="live-badge">
+          <div class="live-dot"></div>
           <span id="countdownText">Refreshing in 10s</span>
         </div>
-        <button class="btn-refresh" onclick="fetchData()">
+        <button class="btn-top" onclick="testDiscordWebhook()">
+          <span>🔔</span> Test Discord Alert
+        </button>
+        <button class="btn-top" onclick="fetchData()">
           <span>🔄</span> Refresh
         </button>
       </div>
     </header>
 
-    <!-- Summary Metrics -->
-    <div class="summary-grid">
-      <div class="summary-card">
-        <span class="card-title">Monitored Targets</span>
-        <span class="card-value blue" id="statTotal">0</span>
+    <!-- KPI Summary Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">Monitored Targets</span>
+        <span class="kpi-value blue" id="statTotal">0</span>
       </div>
-      <div class="summary-card">
-        <span class="card-title">Operational (UP)</span>
-        <span class="card-value green" id="statUp">0</span>
+      <div class="kpi-card">
+        <span class="kpi-label">Operational (UP)</span>
+        <span class="kpi-value green" id="statUp">0</span>
       </div>
-      <div class="summary-card">
-        <span class="card-title">Degraded (Keyword/Latency)</span>
-        <span class="card-value amber" id="statDegraded">0</span>
+      <div class="kpi-card">
+        <span class="kpi-label">Degraded (Content/Lag)</span>
+        <span class="kpi-value amber" id="statDegraded">0</span>
       </div>
-      <div class="summary-card">
-        <span class="card-title">Outages (DOWN)</span>
-        <span class="card-value red" id="statDown">0</span>
+      <div class="kpi-card">
+        <span class="kpi-label">Active Outages</span>
+        <span class="kpi-value red" id="statDown">0</span>
       </div>
-      <div class="summary-card">
-        <span class="card-title">System Uptime</span>
-        <span class="card-value green" id="statUptime">100%</span>
+      <div class="kpi-card">
+        <span class="kpi-label">Uptime SLA</span>
+        <span class="kpi-value green" id="statUptime">100%</span>
       </div>
-      <div class="summary-card">
-        <span class="card-title">Avg Latency</span>
-        <span class="card-value blue" id="statLatency">0ms</span>
+      <div class="kpi-card">
+        <span class="kpi-label">Avg Response</span>
+        <span class="kpi-value purple" id="statLatency">0ms</span>
       </div>
     </div>
 
-    <!-- Live Demo Outage Simulator -->
-    <div class="demo-bar">
-      <div class="demo-info">
-        <span>⚡</span>
+    <!-- Live Interview Lab Banner -->
+    <div class="lab-banner">
+      <div class="lab-info">
+        <div class="lab-icon">⚡</div>
         <div>
-          <div class="demo-title">Interview Demo Outage Simulator</div>
-          <div class="demo-subtitle">Simulate a sudden service crash and trigger live Discord/Slack alert webhooks instantly.</div>
+          <div class="lab-title">Live Interview Demo Playground</div>
+          <div class="lab-desc">Load real-world targets or trigger simulated incidents to showcase live Discord alerting.</div>
         </div>
       </div>
-      <div class="demo-actions">
-        <button class="btn-demo btn-demo-add" onclick="addMockService()">+ Add Mock Target</button>
-        <button class="btn-demo btn-demo-toggle" onclick="toggleMockService()">⚡ Toggle Crash / Recover</button>
+      <div class="lab-buttons">
+        <button class="btn-preset" onclick="addGooglePreset()">🌐 Add Google.com (SSL)</button>
+        <button class="btn-preset" onclick="addGitHubPreset()">🐙 Add GitHub API</button>
+        <button class="btn-preset warning" onclick="addSilentFailPreset()">🕵️ Trigger Silent 200 Mismatch</button>
+        <button class="btn-preset danger" onclick="toggleCrashSim()">🚨 Trigger 500 Outage</button>
       </div>
     </div>
 
-    <!-- Add Service Form -->
-    <div class="add-section">
-      <div class="section-title">
-        <span>➕</span> Add New Target to Monitor
-      </div>
-      <form id="addServiceForm" onsubmit="handleAddService(event)">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="svcName">Service Name</label>
-            <input type="text" id="svcName" class="form-control" placeholder="e.g. Production API" required>
-          </div>
-          <div class="form-group">
-            <label for="svcUrl">URL Endpoint</label>
-            <input type="url" id="svcUrl" class="form-control" placeholder="https://example.com/api" required>
-          </div>
-          <div class="form-group">
-            <label for="svcKeyword">Expected Keyword (Optional)</label>
-            <input type="text" id="svcKeyword" class="form-control" placeholder="e.g. status or Welcome">
-          </div>
-          <div class="form-group">
-            <label for="svcLatency">Max Latency ms (Optional)</label>
-            <input type="number" id="svcLatency" class="form-control" placeholder="e.g. 1500">
-          </div>
-          <button type="submit" class="btn-primary">Add Target</button>
-        </div>
-      </form>
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" id="tabMonitorsBtn" onclick="switchTab('monitors')">
+        <span>📊</span> Monitored Targets
+      </button>
+      <button class="tab-btn" id="tabLogsBtn" onclick="switchTab('logs')">
+        <span>📜</span> Live SRE Audit Stream (<span id="eventCountBadge">0</span>)
+      </button>
     </div>
 
-    <!-- Monitored Services Table -->
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Target & Endpoint</th>
-            <th>Health Status</th>
-            <th>SSL Certificate</th>
-            <th>Latency</th>
-            <th>History (Last 20)</th>
-            <th>Last Checked</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="servicesTableBody">
-          <tr>
-            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading monitored targets...</td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Tab 1: Monitors View -->
+    <div id="monitorsView">
+      <!-- Add Service Form -->
+      <div class="add-card">
+        <div class="add-header">
+          <span>➕</span> Add New Target Endpoint
+        </div>
+        <form id="addServiceForm" onsubmit="handleAddService(event)">
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="svcName">Target Name</label>
+              <input type="text" id="svcName" class="input-ctrl" placeholder="e.g. Stripe Webhook API" required>
+            </div>
+            <div class="input-group">
+              <label for="svcUrl">URL Endpoint</label>
+              <input type="url" id="svcUrl" class="input-ctrl" placeholder="https://api.example.com/v1" required>
+            </div>
+            <div class="input-group">
+              <label for="svcKeyword">Expected Keyword (Silent Fail Guard)</label>
+              <input type="text" id="svcKeyword" class="input-ctrl" placeholder="e.g. status or success">
+            </div>
+            <div class="input-group">
+              <label for="svcLatency">Max Latency SLA (ms)</label>
+              <input type="number" id="svcLatency" class="input-ctrl" placeholder="e.g. 1500">
+            </div>
+            <button type="submit" class="btn-submit">Add Monitor</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Services Table -->
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Target & Endpoint</th>
+              <th>Health Status</th>
+              <th>SSL Watchdog</th>
+              <th>Latency</th>
+              <th>History (Last 20)</th>
+              <th>Last Checked</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="servicesTableBody">
+            <tr>
+              <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">Loading monitored targets...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+
+    <!-- Tab 2: Live SRE Stream View -->
+    <div id="logsView" class="stream-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <h3 style="font-size: 1.05rem; font-weight: 700;">📡 Real-time Operational Event Stream</h3>
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Live audit buffer (Last 60 events)</span>
+      </div>
+      <div class="stream-feed" id="eventStreamContainer">
+        <div style="color: var(--text-muted); text-align: center; padding: 2rem;">Connecting to SRE event stream...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast">
+    <span id="toastIcon">ℹ️</span>
+    <span id="toastMsg">Notification message</span>
   </div>
 
   <!-- Footer -->
   <footer>
     PulseOps Sentinel • Automated CI/CD with Jenkins & Sibling Docker Containers •
-    Build: <span class="build-tag" id="buildNumberTag">loading...</span>
+    Build: <span class="build-badge" id="buildNumberTag">loading...</span>
   </footer>
 
   <script>
     let countdown = 10;
     let countdownTimer = null;
+    let activeTab = 'monitors';
 
     async function fetchData() {
       try {
-        const [summaryRes, servicesRes] = await Promise.all([
+        const [summaryRes, servicesRes, eventsRes] = await Promise.all([
           fetch('/api/summary'),
-          fetch('/api/services')
+          fetch('/api/services'),
+          fetch('/api/events')
         ]);
 
         if (summaryRes.ok && servicesRes.ok) {
           const summary = await summaryRes.json();
           const services = await servicesRes.json();
-
           updateSummary(summary);
           renderTable(services);
+        }
+
+        if (eventsRes.ok) {
+          const events = await eventsRes.json();
+          renderEvents(events);
         }
       } catch (err) {
         console.error('Failed to fetch dashboard data:', err);
@@ -685,66 +835,65 @@
     function renderTable(services) {
       const tbody = document.getElementById('servicesTableBody');
       if (services.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No services monitored yet. Add one above!</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No monitored targets. Click any preset above or add one!</td></tr>`;
         return;
       }
 
       tbody.innerHTML = services.map(s => {
         // Status Badge
-        let statusBadge = `<span class="badge badge-pending">PENDING</span>`;
+        let statusBadge = `<span class="badge badge-pending">● PENDING</span>`;
         if (s.status === 'UP') statusBadge = `<span class="badge badge-up">● UP</span>`;
-        else if (s.status === 'DEGRADED') statusBadge = `<span class="badge badge-degraded" title="${s.history[s.history.length-1]?.reason || ''}">⚠ DEGRADED</span>`;
-        else if (s.status === 'DOWN') statusBadge = `<span class="badge badge-down" title="${s.history[s.history.length-1]?.reason || ''}">✕ DOWN</span>`;
+        else if (s.status === 'DEGRADED') statusBadge = `<span class="badge badge-degraded" title="${escapeHtml(s.history[s.history.length-1]?.reason || '')}">▲ DEGRADED</span>`;
+        else if (s.status === 'DOWN') statusBadge = `<span class="badge badge-down" title="${escapeHtml(s.history[s.history.length-1]?.reason || '')}">✕ DOWN</span>`;
 
-        // SSL Pill
-        let sslPill = `<span class="ssl-pill ssl-none">HTTP</span>`;
+        // SSL Tag
+        let sslTag = `<span class="ssl-tag ssl-plain">HTTP</span>`;
         if (s.ssl && s.ssl.checked) {
           if (s.ssl.daysRemaining !== null) {
             if (s.ssl.daysRemaining <= 14) {
-              sslPill = `<span class="ssl-pill ssl-warn" title="Expires: ${s.ssl.expiryDate} (Issuer: ${s.ssl.issuer})">⚠️ ${s.ssl.daysRemaining}d left</span>`;
+              sslTag = `<span class="ssl-tag ssl-alert" title="Issuer: ${escapeHtml(s.ssl.issuer)} | Expiry: ${s.ssl.expiryDate}">⚠️ ${s.ssl.daysRemaining}d left</span>`;
             } else {
-              sslPill = `<span class="ssl-pill ssl-good" title="Expires: ${s.ssl.expiryDate} (Issuer: ${s.ssl.issuer})">🔒 ${s.ssl.daysRemaining}d left</span>`;
+              sslTag = `<span class="ssl-tag ssl-secure" title="Issuer: ${escapeHtml(s.ssl.issuer)} | Expiry: ${s.ssl.expiryDate}">🔒 ${s.ssl.daysRemaining}d left</span>`;
             }
           } else {
-            sslPill = `<span class="ssl-pill ssl-warn" title="${s.ssl.error || 'SSL Error'}">⚠️ SSL Invalid</span>`;
+            sslTag = `<span class="ssl-tag ssl-alert" title="${escapeHtml(s.ssl.error || 'SSL Invalid')}">⚠️ SSL Error</span>`;
           }
         }
 
-        // History mini-bars (20 items)
+        // History mini-bars
         const historyBars = [];
         const hist = s.history || [];
         for (let i = 0; i < 20; i++) {
           const item = hist[hist.length - 20 + i];
           if (item) {
-            let cls = 'bar-up';
-            if (item.status === 'DEGRADED') cls = 'bar-degraded';
-            if (item.status === 'DOWN') cls = 'bar-down';
-            historyBars.push(`<div class="bar ${cls}" title="${item.status} (${item.ms}ms) - ${item.reason || ''}"></div>`);
+            let cls = 'hist-up';
+            if (item.status === 'DEGRADED') cls = 'hist-degraded';
+            if (item.status === 'DOWN') cls = 'hist-down';
+            historyBars.push(`<div class="hist-block ${cls}" title="${item.status} (${item.ms}ms) - ${escapeHtml(item.reason || '')}"></div>`);
           } else {
-            historyBars.push(`<div class="bar bar-empty"></div>`);
+            historyBars.push(`<div class="hist-block hist-empty"></div>`);
           }
         }
 
-        // Time ago
-        const timeAgo = s.lastChecked ? formatTimeAgo(new Date(s.lastChecked)) : 'Never';
+        const timeAgo = s.lastChecked ? formatTimeAgo(new Date(s.lastChecked)) : 'Pending';
 
         return `
           <tr>
             <td>
-              <div class="service-name">
+              <div class="target-title">
                 <span>${escapeHtml(s.name)}</span>
-                <a href="${escapeHtml(s.url)}" target="_blank" class="service-url">${escapeHtml(s.url)}</a>
+                <a href="${escapeHtml(s.url)}" target="_blank" class="target-url">${escapeHtml(s.url)}</a>
               </div>
             </td>
             <td>${statusBadge}</td>
-            <td>${sslPill}</td>
-            <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">${s.responseTimeMs}ms</td>
-            <td><div class="history-bars">${historyBars.join('')}</div></td>
+            <td>${sslTag}</td>
+            <td style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.88rem;">${s.responseTimeMs}ms</td>
+            <td><div class="history-row">${historyBars.join('')}</div></td>
             <td style="color: var(--text-muted); font-size: 0.8rem;">${timeAgo}</td>
             <td>
               <div style="display: flex; gap: 0.4rem;">
-                <button class="btn-action" onclick="checkServiceNow('${s.id}')" title="Trigger instant check">⚡ Ping</button>
-                <button class="btn-action btn-danger" onclick="deleteServiceTarget('${s.id}')" title="Remove target">🗑️</button>
+                <button class="btn-act" onclick="checkServiceNow('${s.id}')" title="Trigger instant check">⚡ Ping</button>
+                <button class="btn-act del" onclick="deleteServiceTarget('${s.id}')" title="Delete monitor">🗑️</button>
               </div>
             </td>
           </tr>
@@ -752,18 +901,39 @@
       }).join('');
     }
 
-    function formatTimeAgo(date) {
-      const sec = Math.floor((new Date() - date) / 1000);
-      if (sec < 5) return 'Just now';
-      if (sec < 60) return `${sec}s ago`;
-      const min = Math.floor(sec / 60);
-      if (min < 60) return `${min}m ago`;
-      return `${Math.floor(min / 60)}h ago`;
+    function renderEvents(events) {
+      document.getElementById('eventCountBadge').innerText = events.length;
+      const container = document.getElementById('eventStreamContainer');
+      if (events.length === 0) {
+        container.innerHTML = `<div style="color: var(--text-muted); text-align: center; padding: 2rem;">No events recorded yet. Checks will appear here automatically!</div>`;
+        return;
+      }
+
+      container.innerHTML = events.map(e => `
+        <div class="log-item ${e.severity}">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-weight: 700; color: #fff;">[${escapeHtml(e.type)}]</span>
+            <span style="color: var(--accent); font-weight: 600;">${escapeHtml(e.serviceName)}:</span>
+            <span style="color: var(--text);">${escapeHtml(e.message)}</span>
+          </div>
+          <span style="color: var(--text-muted); font-size: 0.75rem; white-space: nowrap;">${new Date(e.time).toLocaleTimeString()}</span>
+        </div>
+      `).join('');
     }
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    function switchTab(tab) {
+      activeTab = tab;
+      if (tab === 'monitors') {
+        document.getElementById('monitorsView').style.display = 'block';
+        document.getElementById('logsView').style.display = 'none';
+        document.getElementById('tabMonitorsBtn').classList.add('active');
+        document.getElementById('tabLogsBtn').classList.remove('active');
+      } else {
+        document.getElementById('monitorsView').style.display = 'none';
+        document.getElementById('logsView').style.display = 'block';
+        document.getElementById('tabMonitorsBtn').classList.remove('active');
+        document.getElementById('tabLogsBtn').classList.add('active');
+      }
     }
 
     async function handleAddService(event) {
@@ -782,18 +952,20 @@
 
         if (res.ok) {
           document.getElementById('addServiceForm').reset();
+          showToast('✅', `Added "${name}" to monitoring`);
           fetchData();
         } else {
           const err = await res.json();
-          alert('Error: ' + (err.error || 'Failed to add service'));
+          showToast('❌', err.error || 'Failed to add target');
         }
       } catch (e) {
-        alert('Network error adding service');
+        showToast('❌', 'Network error');
       }
     }
 
     async function checkServiceNow(id) {
       try {
+        showToast('⚡', 'Dispatching immediate check...');
         await fetch(`/api/services/${id}/check`, { method: 'POST' });
         fetchData();
       } catch (e) {
@@ -802,44 +974,106 @@
     }
 
     async function deleteServiceTarget(id) {
-      if (!confirm('Remove this service from monitoring?')) return;
+      if (!confirm('Remove this monitor?')) return;
       try {
         await fetch(`/api/services/${id}`, { method: 'DELETE' });
+        showToast('🗑️', 'Monitor removed');
         fetchData();
       } catch (e) {
         console.error(e);
       }
     }
 
-    async function addMockService() {
-      try {
-        await fetch('/api/services', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: 'Demo Mock Microservice',
-            url: window.location.origin + '/api/mock/target',
-            expectedKeyword: 'operational'
-          })
-        });
-        fetchData();
-      } catch (e) {
-        console.error(e);
-      }
+    // Presets
+    async function addGooglePreset() {
+      await fetch('/api/services', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Google Production',
+          url: 'https://www.google.com',
+          expectedKeyword: 'Google'
+        })
+      });
+      showToast('🌐', 'Added Google with SSL Watchdog');
+      fetchData();
     }
 
-    async function toggleMockService() {
+    async function addGitHubPreset() {
+      await fetch('/api/services', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'GitHub API',
+          url: 'https://api.github.com'
+        })
+      });
+      showToast('🐙', 'Added GitHub API with SSL Watchdog');
+      fetchData();
+    }
+
+    async function addSilentFailPreset() {
+      await fetch('/api/services', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Silent Mismatch Demo',
+          url: window.location.origin + '/api/mock/silent-fail',
+          expectedKeyword: 'PAYMENT_SUCCESS'
+        })
+      });
+      showToast('🕵️', 'Added Silent Mismatch Target (flags 200 OK missing keyword)');
+      fetchData();
+    }
+
+    async function toggleCrashSim() {
       try {
         const res = await fetch('/api/mock/toggle', { method: 'POST' });
         const data = await res.json();
-        alert(data.message + '\n\nWatch the dashboard and your Discord/Slack channel as checks run!');
+        showToast('⚡', data.message);
         fetchData();
       } catch (e) {
         console.error(e);
       }
     }
 
-    // Auto-refresh countdown loop
+    async function testDiscordWebhook() {
+      try {
+        showToast('🔔', 'Sending test payload to Discord/Slack...');
+        const res = await fetch('/api/webhook/test', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('✅', 'Discord test card fired successfully!');
+        } else {
+          showToast('⚠️', data.error || 'Webhook test failed');
+        }
+      } catch (e) {
+        showToast('❌', 'Error sending webhook test');
+      }
+    }
+
+    function showToast(icon, msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastIcon').innerText = icon;
+      document.getElementById('toastMsg').innerText = msg;
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    function formatTimeAgo(date) {
+      const sec = Math.floor((new Date() - date) / 1000);
+      if (sec < 5) return 'Just now';
+      if (sec < 60) return `${sec}s ago`;
+      const min = Math.floor(sec / 60);
+      if (min < 60) return `${min}m ago`;
+      return `${Math.floor(min / 60)}h ago`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
     function startCountdown() {
       countdown = 10;
       if (countdownTimer) clearInterval(countdownTimer);
@@ -853,7 +1087,6 @@
       }, 1000);
     }
 
-    // Initial load
     fetchData();
     startCountdown();
   </script>

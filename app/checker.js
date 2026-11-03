@@ -1,9 +1,31 @@
 const tls = require('tls');
 const { URL } = require('url');
 
-// In-memory store for monitored services
+// In-memory store for monitored services and real-time SRE event logs
 let services = [];
+let eventLogs = [];
 let checkerInterval = null;
+
+// Helper: push event to the rolling SRE audit log (max 60 entries)
+function logEvent(type, serviceName, message, severity = 'info') {
+  const entry = {
+    id: 'evt_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
+    time: new Date().toISOString(),
+    type, // 'HEALTH' | 'ALERT' | 'SSL' | 'SYSTEM'
+    serviceName,
+    message,
+    severity // 'info' | 'success' | 'warning' | 'danger'
+  };
+  eventLogs.unshift(entry);
+  if (eventLogs.length > 60) {
+    eventLogs.pop();
+  }
+  return entry;
+}
+
+function getEventLogs() {
+  return eventLogs;
+}
 
 // Helper: generate unique IDs
 function generateId() {
@@ -256,10 +278,14 @@ async function checkService(service, customAlertSender = sendWebhookAlert) {
   const oldStatus = service.status;
   service.status = status;
 
+  // Log to SRE audit event stream
+  logEvent('HEALTH', service.name, `${status} (${responseTimeMs}ms) - ${reason}`, status === 'UP' ? 'success' : (status === 'DEGRADED' ? 'warning' : 'danger'));
+
   if (oldStatus !== 'PENDING' && oldStatus !== status) {
     // Status has changed! Trigger alert
     if (status === 'DOWN') {
       const msg = `ALERT: ${service.name} is DOWN! (${service.url}) - ${reason}`;
+      logEvent('ALERT', service.name, `State transition: ${oldStatus} ➔ DOWN`, 'danger');
       await customAlertSender(msg, `🚨 SERVICE DOWN: ${service.name}`, 'red', [
         { name: 'Target URL', value: service.url, inline: true },
         { name: 'Error', value: reason, inline: true },
@@ -267,6 +293,7 @@ async function checkService(service, customAlertSender = sendWebhookAlert) {
       ]);
     } else if (status === 'DEGRADED') {
       const msg = `WARNING: ${service.name} is DEGRADED! (${service.url}) - ${reason}`;
+      logEvent('ALERT', service.name, `State transition: ${oldStatus} ➔ DEGRADED`, 'warning');
       await customAlertSender(msg, `⚠️ SERVICE DEGRADED: ${service.name}`, 'amber', [
         { name: 'Target URL', value: service.url, inline: true },
         { name: 'Warning', value: reason, inline: true },
@@ -274,6 +301,7 @@ async function checkService(service, customAlertSender = sendWebhookAlert) {
       ]);
     } else if (status === 'UP') {
       const msg = `RECOVERED: ${service.name} is back UP (${service.url}) [${responseTimeMs}ms]`;
+      logEvent('ALERT', service.name, `State transition: ${oldStatus} ➔ UP (Recovered)`, 'success');
       await customAlertSender(msg, `✅ SERVICE RECOVERED: ${service.name}`, 'green', [
         { name: 'Target URL', value: service.url, inline: true },
         { name: 'Status', value: reason, inline: true },
@@ -285,6 +313,7 @@ async function checkService(service, customAlertSender = sendWebhookAlert) {
   // SSL Certificate Expiration Warning (if expiring in <= 14 days)
   if (sslDetails.checked && sslDetails.valid && sslDetails.daysRemaining !== null && sslDetails.daysRemaining <= 14 && !service.sslAlertSent) {
     const sslMsg = `SECURITY ALERT: ${service.name} SSL certificate expires in ${sslDetails.daysRemaining} days! (Issuer: ${sslDetails.issuer})`;
+    logEvent('SSL', service.name, `SSL cert expires in ${sslDetails.daysRemaining} days (${sslDetails.issuer})`, 'warning');
     await customAlertSender(sslMsg, `🔒 SSL CERTIFICATE EXPIRING: ${service.name}`, 'amber', [
       { name: 'Domain', value: service.url, inline: true },
       { name: 'Days Left', value: `${sslDetails.daysRemaining} days`, inline: true },
@@ -416,5 +445,7 @@ module.exports = {
   addService,
   deleteService,
   resetServices,
-  getSummary
+  getSummary,
+  getEventLogs,
+  logEvent
 };
