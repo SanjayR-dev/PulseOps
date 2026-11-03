@@ -104,6 +104,19 @@ function seedDefaults() {
         lastChecked: new Date().toISOString(),
         ssl: { checked: false, valid: null, daysRemaining: null, issuer: null, expiryDate: null, error: null },
         history: makeHistory('UP', 8, 'HTTP 200')
+      },
+      {
+        id: 'svc_real_down',
+        name: 'Simulated Gateway Outage (Real HTTP 503)',
+        url: 'https://httpbin.org/status/503',
+        expectedKeyword: null,
+        maxLatencyMs: 1000,
+        status: 'DOWN',
+        previousStatus: 'DOWN',
+        responseTimeMs: 310,
+        lastChecked: new Date().toISOString(),
+        ssl: { checked: true, valid: true, daysRemaining: 120, issuer: "Amazon", expiryDate: '2027-03-01T00:00:00.000Z', error: null },
+        history: makeHistory('DOWN', 310, 'HTTP 503')
       }
     );
 

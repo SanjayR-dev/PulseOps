@@ -579,6 +579,34 @@
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255, 255, 255, 0.02); }
 
+    /* Red Pulsating Outage Row */
+    tr.row-down td {
+      background: rgba(244, 63, 94, 0.09) !important;
+      border-bottom: 1px solid rgba(244, 63, 94, 0.35) !important;
+      animation: rowDownGlow 1.8s ease-in-out infinite;
+    }
+
+    @keyframes rowDownGlow {
+      0%, 100% {
+        background: rgba(244, 63, 94, 0.07) !important;
+        box-shadow: inset 0 0 10px rgba(244, 63, 94, 0.08);
+      }
+      50% {
+        background: rgba(244, 63, 94, 0.22) !important;
+        box-shadow: inset 0 0 25px rgba(244, 63, 94, 0.35), 0 0 15px rgba(244, 63, 94, 0.2);
+      }
+    }
+
+    tr.row-down:hover td {
+      background: rgba(244, 63, 94, 0.25) !important;
+    }
+
+    /* Degraded Amber Row */
+    tr.row-degraded td {
+      background: rgba(245, 158, 11, 0.06) !important;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.3) !important;
+    }
+
     .flash-pulse td {
       animation: flashRow 1s ease-out;
     }
@@ -612,8 +640,8 @@
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.75rem;
+      gap: 0.45rem;
+      padding: 0.38rem 0.8rem;
       border-radius: 6px;
       font-size: 0.76rem;
       font-weight: 700;
@@ -621,31 +649,102 @@
       letter-spacing: 0.04em;
     }
 
+    /* Green Pulsating UP Badge */
     .badge-up {
-      background: var(--success-bg);
+      background: rgba(16, 185, 129, 0.16);
       color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      box-shadow: 0 0 12px var(--success-glow);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.3);
+      animation: badgeUpBreathe 2s ease-in-out infinite;
+    }
+
+    @keyframes badgeUpBreathe {
+      0%, 100% {
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
+        border-color: rgba(16, 185, 129, 0.35);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 22px rgba(16, 185, 129, 0.7), inset 0 0 10px rgba(16, 185, 129, 0.25);
+        border-color: #34d399;
+        color: #6ee7b7;
+        transform: scale(1.04);
+      }
+    }
+
+    /* Red Pulsating DOWN Badge */
+    .badge-down {
+      background: rgba(244, 63, 94, 0.22);
+      color: #fca5a5;
+      border: 1px solid rgba(244, 63, 94, 0.55);
+      box-shadow: 0 0 16px rgba(244, 63, 94, 0.4);
+      animation: badgeDownAlert 1.2s ease-in-out infinite;
+    }
+
+    @keyframes badgeDownAlert {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 12px rgba(244, 63, 94, 0.3);
+      }
+      50% {
+        transform: scale(1.06);
+        box-shadow: 0 0 26px rgba(244, 63, 94, 0.85), inset 0 0 10px rgba(244, 63, 94, 0.35);
+        color: #ffffff;
+        border-color: #f43f5e;
+      }
     }
 
     .badge-degraded {
-      background: var(--warning-bg);
+      background: rgba(245, 158, 11, 0.18);
       color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      box-shadow: 0 0 12px var(--warning-glow);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+      animation: badgeDegradedPulse 1.8s ease-in-out infinite;
     }
 
-    .badge-down {
-      background: var(--danger-bg);
-      color: #f87171;
-      border: 1px solid rgba(244, 63, 94, 0.3);
-      box-shadow: 0 0 12px var(--danger-glow);
-      animation: alertPulse 1.2s infinite;
+    @keyframes badgeDegradedPulse {
+      0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.2); }
+      50% { box-shadow: 0 0 18px rgba(245, 158, 11, 0.55); color: #fde68a; }
     }
 
-    @keyframes alertPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .badge-dot.pulse-green {
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: dotPulseGreen 1.4s infinite;
+    }
+
+    @keyframes dotPulseGreen {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(1.4); }
+    }
+
+    .badge-dot.pulse-red {
+      background: #f43f5e;
+      box-shadow: 0 0 12px #f43f5e;
+      animation: dotPulseRed 0.9s infinite;
+    }
+
+    @keyframes dotPulseRed {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.2; transform: scale(1.5); }
+    }
+
+    .badge-dot.pulse-amber {
+      background: #f59e0b;
+      box-shadow: 0 0 10px #f59e0b;
+      animation: dotPulseAmber 1.2s infinite;
+    }
+
+    @keyframes dotPulseAmber {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
 
     .badge-pending {
@@ -1425,11 +1524,15 @@
       }
 
       tbody.innerHTML = services.map(s => {
-        // Status Badge
+        // Status Badge with Live Pulsating Dot Indicators
         let statusBadge = `<span class="badge badge-pending">● PENDING</span>`;
-        if (s.status === 'UP') statusBadge = `<span class="badge badge-up">● UP</span>`;
-        else if (s.status === 'DEGRADED') statusBadge = `<span class="badge badge-degraded" title="${escapeHtml(s.history[s.history.length-1]?.reason || '')}">▲ DEGRADED</span>`;
-        else if (s.status === 'DOWN') statusBadge = `<span class="badge badge-down" title="${escapeHtml(s.history[s.history.length-1]?.reason || '')}">✕ DOWN</span>`;
+        if (s.status === 'UP') {
+          statusBadge = `<span class="badge badge-up"><span class="badge-dot pulse-green"></span> UP</span>`;
+        } else if (s.status === 'DEGRADED') {
+          statusBadge = `<span class="badge badge-degraded" title="${escapeHtml(s.history[s.history.length-1]?.reason || '')}"><span class="badge-dot pulse-amber"></span> DEGRADED</span>`;
+        } else if (s.status === 'DOWN') {
+          statusBadge = `<span class="badge badge-down" title="${escapeHtml(s.history[s.history.length-1]?.reason || '')}"><span class="badge-dot pulse-red"></span> DOWN</span>`;
+        }
 
         // SSL Tag
         let sslTag = `<span class="ssl-tag ssl-plain">HTTP</span>`;
@@ -1462,9 +1565,10 @@
 
         const timeAgo = s.lastChecked ? formatTimeAgo(new Date(s.lastChecked)) : 'Pending';
         const flashClass = flashId === s.id ? 'flash-pulse' : '';
+        const rowStateClass = s.status === 'DOWN' ? 'row-down' : (s.status === 'DEGRADED' ? 'row-degraded' : '');
 
         return `
-          <tr class="${flashClass}">
+          <tr class="${flashClass} ${rowStateClass}">
             <td>
               <div class="target-title">
                 <span>${escapeHtml(s.name)}</span>
