@@ -33,7 +33,7 @@ flowchart TD
     end
 
     subgraph Registry["Docker Hub Registry"]
-        HUB["DOCKERHUB_USER/devops-mini-app<br/>Tags: :BUILD_NUMBER & :latest"]
+        HUB["sanjayr8dev/devops-mini-app<br/>Tags: :BUILD_NUMBER & :latest"]
     end
 
     GH -.->|"Detects new commit"| POLL
@@ -49,7 +49,7 @@ flowchart TD
 - **GitHub Repository (`https://github.com/SanjayR-dev/PulseOps.git`)**: Central source code repository storing app code, Dockerfile, and Jenkinsfile.
 - **Custom Jenkins Container**: Pre-packaged with Docker CLI, Node.js 18, and root access to `/var/run/docker.sock`. Orchestrates the entire pipeline on port `8080`.
 - **Docker-out-of-Docker (Sibling Container Pattern)**: By mounting the host's `/var/run/docker.sock`, Jenkins starts containers side-by-side with itself on the host, avoiding the file system conflicts of Docker-in-Docker.
-- **Docker Hub (`DOCKERHUB_USER/devops-mini-app`)**: Central image repository storing versioned image tags (`:<BUILD_NUMBER>`) and the moving pointer (`:latest`).
+- **Docker Hub (`sanjayr8dev/devops-mini-app`)**: Central image repository storing versioned image tags (`:<BUILD_NUMBER>`) and the moving pointer (`:latest`).
 - **Application Container (`devops-mini-app`)**: Production container running Node.js 18 Alpine, exposing port `3000`, equipped with an automated Docker `HEALTHCHECK`.
 
 ---
@@ -62,7 +62,7 @@ Ensure the following tools and accounts are ready before starting:
    - Installed and running.
    - On Windows: Ensure WSL2 backend or Hyper-V is running and Docker Desktop is started.
 2. **Docker Hub Account**:
-   - Account username (`DOCKERHUB_USER`).
+   - Account username: `sanjayr8dev`.
    - Personal Access Token created under `Account Settings -> Security -> New Access Token` (read/write permissions).
 3. **GitHub Account & Repository**:
    - Configured repository: `https://github.com/SanjayR-dev/PulseOps.git`.
@@ -81,19 +81,13 @@ git push -u origin main
 
 ---
 
-### Step 3.2: Update Placeholders
-Open `Jenkinsfile` and replace the placeholder `DOCKERHUB_USER` with your real Docker Hub username:
+### Step 3.2: Configured Docker Hub Image
+The `Jenkinsfile` is pre-configured with your Docker Hub account:
 ```groovy
 environment {
-    IMAGE = 'DOCKERHUB_USER/devops-mini-app'
+    IMAGE = 'sanjayr8dev/devops-mini-app'
     CREDS = credentials('dockerhub-creds')
 }
-```
-Commit and push the update to GitHub:
-```bash
-git add Jenkinsfile
-git commit -m "chore: configure Docker Hub username"
-git push
 ```
 
 ---
@@ -145,7 +139,7 @@ Once the initial plugins finish installing:
 3. Fill in the following exact fields:
    - **Kind**: `Username with password`
    - **Scope**: `Global (Jenkins, nodes, items, all child items, etc)`
-   - **Username**: Enter your `DOCKERHUB_USER`.
+   - **Username**: `sanjayr8dev`
    - **Password**: Enter your Docker Hub Personal Access Token (or password).
    - **ID**: `dockerhub-creds` *(must match Jenkinsfile exactly)*.
    - **Description**: `Docker Hub Credentials`
@@ -192,7 +186,7 @@ Once the initial plugins finish installing:
 1. **Pipeline Execution**: All 6 stages show green checkmarks:
    - Stage 1: `Checkout`
    - Stage 2: `Test` (passes `health.test.js`)
-   - Stage 3: `Build image` (creates `DOCKERHUB_USER/devops-mini-app:<BUILD_NUMBER>` and `:latest`)
+   - Stage 3: `Build image` (creates `sanjayr8dev/devops-mini-app:<BUILD_NUMBER>` and `:latest`)
    - Stage 4: `Push image` (pushes both tags to Docker Hub)
    - Stage 5: `Deploy` (spawns container `devops-mini-app` on port 3000)
    - Stage 6: `Verify` (performs curl health check against `/health`)

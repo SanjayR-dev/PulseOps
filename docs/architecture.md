@@ -40,7 +40,7 @@ flowchart TD
     end
 
     subgraph Cloud_Registry["Docker Hub Registry"]
-        DH["Docker Hub Repository<br/>DOCKERHUB_USER/devops-mini-app<br/>(:build_num & :latest)"]
+        DH["Docker Hub Repository<br/>sanjayr8dev/devops-mini-app<br/>(:build_num & :latest)"]
     end
 
     GH -.->|"Detects new commits"| J_POLL
@@ -83,8 +83,8 @@ flowchart TD
 - **Role**: Centralized container artifact repository.
 - **Security**: Authenticated using Jenkins credentials (`dockerhub-creds`), storing the username and Personal Access Token securely. The credentials are provided to the pipeline via masked environment variables (`$CREDS_USR`, `$CREDS_PSW`) without committing secrets or writing tokens to repository files.
 - **Tagging Strategy**: Builds produce two tags for every successful run:
-  - `DOCKERHUB_USER/devops-mini-app:<BUILD_NUMBER>`: Immutable, versioned build artifact.
-  - `DOCKERHUB_USER/devops-mini-app:latest`: Moving pointer to the current stable build.
+  - `sanjayr8dev/devops-mini-app:<BUILD_NUMBER>`: Immutable, versioned build artifact.
+  - `sanjayr8dev/devops-mini-app:latest`: Moving pointer to the current stable build.
 
 ### 5. Application Container (`devops-mini-app`)
 - **Base Image**: `node:18-alpine` for minimal attack surface and lightweight footprint (< 120MB).

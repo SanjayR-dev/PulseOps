@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        IMAGE = 'DOCKERHUB_USER/devops-mini-app'
+        IMAGE = 'sanjayr8dev/devops-mini-app'
         CREDS = credentials('dockerhub-creds')
     }
 
@@ -89,3 +89,4 @@ pipeline {
         }
     }
 }
+
