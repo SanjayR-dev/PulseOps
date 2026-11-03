@@ -11,7 +11,7 @@ PulseOps implements an end-to-end automated Continuous Integration and Continuou
 ```mermaid
 flowchart TD
     subgraph Developer_Environment["Local Developer Machine"]
-        DEV["Developer"] -->|"git commit & git push"| GH["GitHub Repository<br/>(GITHUB_REPO_URL)"]
+        DEV["Developer"] -->|"git commit & git push"| GH["GitHub Repository<br/>https://github.com/SanjayR-dev/PulseOps.git"]
     end
 
     subgraph Host_Docker_Engine["Host Docker Engine & Network"]
@@ -100,3 +100,4 @@ flowchart TD
   1. Requests `http://host.docker.internal:3000/health` (standard Docker bridge-to-host DNS route).
   2. If DNS fails or host network restrictions block `host.docker.internal`, it automatically falls back to Docker bridge gateway `http://172.17.0.1:3000/health`.
   3. Halts the build and marks the deployment as failed if HTTP 200 is not received within the timeout window.
+

@@ -9,7 +9,7 @@ PulseOps is an end-to-end automated Continuous Integration and Continuous Deploy
 ```mermaid
 flowchart TD
     subgraph Developer["Local Workstation"]
-        DEV["Developer"] -->|"git push"| GH["GitHub Repository<br/>GITHUB_REPO_URL"]
+        DEV["Developer"] -->|"git push"| GH["GitHub Repository<br/>https://github.com/SanjayR-dev/PulseOps.git"]
     end
 
     subgraph Host["Docker Host Engine"]
@@ -46,7 +46,7 @@ flowchart TD
 ```
 
 ### Component Overview
-- **GitHub Repository (`GITHUB_REPO_URL`)**: Central source code repository storing app code, Dockerfile, and Jenkinsfile.
+- **GitHub Repository (`https://github.com/SanjayR-dev/PulseOps.git`)**: Central source code repository storing app code, Dockerfile, and Jenkinsfile.
 - **Custom Jenkins Container**: Pre-packaged with Docker CLI, Node.js 18, and root access to `/var/run/docker.sock`. Orchestrates the entire pipeline on port `8080`.
 - **Docker-out-of-Docker (Sibling Container Pattern)**: By mounting the host's `/var/run/docker.sock`, Jenkins starts containers side-by-side with itself on the host, avoiding the file system conflicts of Docker-in-Docker.
 - **Docker Hub (`DOCKERHUB_USER/devops-mini-app`)**: Central image repository storing versioned image tags (`:<BUILD_NUMBER>`) and the moving pointer (`:latest`).
@@ -65,25 +65,19 @@ Ensure the following tools and accounts are ready before starting:
    - Account username (`DOCKERHUB_USER`).
    - Personal Access Token created under `Account Settings -> Security -> New Access Token` (read/write permissions).
 3. **GitHub Account & Repository**:
-   - Empty or populated Git repository (`GITHUB_REPO_URL`).
+   - Configured repository: `https://github.com/SanjayR-dev/PulseOps.git`.
 4. **Git CLI & Node.js 18+** (for local testing).
 
 ---
 
 ## 3. Step-by-Step Setup Guide
 
-### Step 3.1: Clone and Configure the Repository
-Push this repository to your GitHub account:
+### Step 3.1: Connect and Push to GitHub
+Link this repository to your GitHub account:
 ```bash
-git init
-git add .
-git commit -m "feat: initial commit of PulseOps CI/CD pipeline"
-git branch -M main
-git remote add origin GITHUB_REPO_URL
+git remote add origin https://github.com/SanjayR-dev/PulseOps.git
 git push -u origin main
 ```
-
-*(Note: Replace `GITHUB_REPO_URL` with your actual repository URL).*
 
 ---
 
@@ -166,7 +160,7 @@ Once the initial plugins finish installing:
 4. In the configuration page, scroll down to the **Pipeline** section:
    - **Definition**: Select `Pipeline script from SCM`.
    - **SCM**: Select `Git`.
-   - **Repository URL**: Paste `GITHUB_REPO_URL`.
+   - **Repository URL**: Paste `https://github.com/SanjayR-dev/PulseOps.git`.
    - **Credentials**: Select your GitHub credentials if repository is private; leave as `- none -` if public.
    - **Branch Specifier**: `*/main` (or `*/master` matching your GitHub default branch).
    - **Script Path**: `Jenkinsfile`.
@@ -281,3 +275,4 @@ Follow this step-by-step walkthrough to present the project to interviewers or r
   - Visit `http://localhost:3000` to show the updated message with the live build number.
   - Visit `http://localhost:3000/health` to demonstrate the automated health check verification.
   - Wrap up: *"We have full CI/CD automation from git push to production health verification."*
+
