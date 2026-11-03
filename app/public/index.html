@@ -976,6 +976,40 @@
     .hist-empty { background: rgba(255, 255, 255, 0.08); }
     body.light-mode .hist-empty { background: rgba(0, 0, 0, 0.08); }
 
+    /* Table Mini-Heartbeat Strip */
+    .mini-pulse-wrap {
+      width: 130px;
+      height: 28px;
+      background: #090e17;
+      background-image: 
+        linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+      background-size: 10px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+    }
+
+    body.light-mode .mini-pulse-wrap {
+      background: #ffffff;
+      background-image: 
+        linear-gradient(rgba(2, 132, 199, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(2, 132, 199, 0.07) 1px, transparent 1px);
+      background-size: 10px 10px;
+      border-color: rgba(15, 23, 42, 0.12);
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.03);
+    }
+
+    .mini-pulse-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
     .btn-act {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
@@ -1290,6 +1324,7 @@
             <tr>
               <th>Target & Endpoint</th>
               <th>Health Status</th>
+              <th>Live Heartbeat</th>
               <th>SSL Watchdog</th>
               <th>Response Time</th>
               <th>History (Last 20 Checks)</th>
@@ -1299,7 +1334,7 @@
           </thead>
           <tbody id="servicesTableBody">
             <tr>
-              <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">Loading monitored targets...</td>
+              <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">Loading monitored targets...</td>
             </tr>
           </tbody>
         </table>
@@ -1618,40 +1653,51 @@
       if (!pulseCanvas || !pulseCanvas.parentElement) return;
       pulseCanvas.width = pulseCanvas.parentElement.clientWidth;
       pulseCanvas.height = pulseCanvas.parentElement.clientHeight;
-      if (pulseBuffer.length !== pulseCanvas.width) {
-        const cy = pulseCanvas.height / 2;
-        pulseBuffer = new Array(pulseCanvas.width).fill(cy);
+      const w = pulseCanvas.width;
+      const h = pulseCanvas.height;
+      const cy = h / 2;
+      const amplitude = (h / 2) * 0.78;
+      const beatWidth = Math.max(160, Math.floor(w / 4));
+
+      pulseBuffer = new Array(w);
+      for (let x = 0; x < w; x++) {
+        const phase = (x % beatWidth) / beatWidth;
+        pulseBuffer[x] = cy - getEcgDeflection(phase) * amplitude;
       }
     }
     window.addEventListener('resize', resizePulseCanvas);
 
     // Authentic P-Q-R-S-T Cardiac Deflection Formula (Matches user medical reference)
     function getEcgDeflection(phase) {
-      const p = phase % 1;
-      if (p < 0.16) return 0;
+      const p = (phase % 1 + 1) % 1;
+      // Diastole flat baseline (0.00 - 0.18)
+      if (p < 0.18) return 0;
+      // P wave: gentle rounded atrium contraction (+0.16)
       if (p < 0.26) {
-        const x = (p - 0.16) / 0.10;
-        return Math.sin(x * Math.PI) * 0.18; // P Wave
+        return Math.sin((p - 0.18) / 0.08 * Math.PI) * 0.16;
       }
-      if (p < 0.33) return 0; // PR Segment
-      if (p < 0.36) {
-        const x = (p - 0.33) / 0.03;
-        return -Math.sin(x * Math.PI) * 0.25; // Q Wave dip
+      // PR segment: flat baseline (0.26 - 0.33)
+      if (p < 0.33) return 0;
+      // Q wave: small sharp negative notch (-0.18)
+      if (p < 0.37) {
+        return -Math.sin((p - 0.33) / 0.04 * Math.PI) * 0.18;
       }
-      if (p < 0.41) {
-        const x = (p - 0.36) / 0.05;
-        return Math.sin(x * Math.PI) * 1.0; // R Wave TALL spike!
+      // R wave: TALL needle spike (+1.0)
+      if (p < 0.43) {
+        return Math.sin((p - 0.37) / 0.06 * Math.PI) * 1.0;
       }
-      if (p < 0.46) {
-        const x = (p - 0.41) / 0.05;
-        return -Math.sin(x * Math.PI) * 0.50; // S Wave dip
+      // S wave: sharp negative notch (-0.35)
+      if (p < 0.48) {
+        return -Math.sin((p - 0.43) / 0.05 * Math.PI) * 0.35;
       }
-      if (p < 0.53) return 0; // ST Segment
+      // ST segment: flat baseline (0.48 - 0.55)
+      if (p < 0.55) return 0;
+      // T wave: smooth rounded ventricular repolarization (+0.24)
       if (p < 0.69) {
-        const x = (p - 0.53) / 0.16;
-        return Math.sin(x * Math.PI) * 0.28; // T Wave
+        return Math.sin((p - 0.55) / 0.14 * Math.PI) * 0.24;
       }
-      return 0; // Baseline
+      // TP segment: resting diastole flat baseline until next beat (0.69 - 1.00)
+      return 0;
     }
 
     // Clinical Hospital Monitor Audio Beep (880 Hz pure sine chirp on R-wave peak)
@@ -1663,7 +1709,7 @@
         const gain = audioCtx.createGain();
 
         let freq = 880; // Classic ICU A5 pitch
-        if (currentFleetStatus === 'DEGRADED') freq = 1046.5; // High C6 for arrhythmia
+        if (currentFleetStatus === 'ALERT' || currentFleetStatus === 'DEGRADED') freq = 1046.5;
 
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now);
@@ -1687,15 +1733,15 @@
       const w = pulseCanvas.width;
       const h = pulseCanvas.height;
       const cy = h / 2;
-      const amplitude = (h / 2) * 0.82;
+      const amplitude = (h / 2) * 0.78;
       const isLight = document.body.classList.contains('light-mode');
 
       // Exactly 4 heartbeat complexes across screen width (matches user reference image!)
-      const beatWidth = Math.max(140, Math.floor(w / 4));
+      const beatWidth = Math.max(160, Math.floor(w / 4));
 
       // Calculate sweep speed (pixels per second)
-      let sweepSpeed = 220;
-      if (currentFleetStatus === 'DEGRADED') sweepSpeed = 310;
+      let sweepSpeed = 190;
+      if (currentFleetStatus === 'ALERT' || currentFleetStatus === 'DEGRADED') sweepSpeed = 250;
       const advance = Math.max(1, (sweepSpeed * dt) / 1000);
 
       const prevCursor = Math.floor(sweepCursor);
@@ -1709,23 +1755,22 @@
         const phase = (x % beatWidth) / beatWidth;
 
         let deflection = 0;
-        if (currentFleetStatus === 'DOWN') {
-          // Real hospital FLATLINE with subtle analog tremor
-          deflection = (Math.random() - 0.5) * 0.035;
+        if (currentFleetStatus === 'BLACKOUT') {
+          deflection = (Math.random() - 0.5) * 0.015; // subtle analog drift on total asystole
         } else if (currentFleetStatus === 'DEGRADED') {
-          deflection = getEcgDeflection((phase * 1.3) % 1);
+          deflection = getEcgDeflection((phase * 1.25) % 1);
         } else {
           deflection = getEcgDeflection(phase);
         }
 
         pulseBuffer[x] = cy - deflection * amplitude;
 
-        // R-Wave Peak Trigger (phase crosses ~0.385)
-        if (currentFleetStatus !== 'DOWN') {
+        // R-Wave Peak Trigger (phase crosses ~0.40)
+        if (currentFleetStatus !== 'BLACKOUT') {
           const prevPhase = ((x - 1 + beatWidth) % beatWidth) / beatWidth;
-          if (prevPhase < 0.385 && phase >= 0.385) {
+          if (prevPhase < 0.40 && phase >= 0.40) {
             const now = performance.now();
-            if (now - lastPeakTime > 300) {
+            if (now - lastPeakTime > 260) {
               lastPeakTime = now;
               const heart = document.getElementById('heartBeatIcon');
               if (heart) {
@@ -1744,8 +1789,7 @@
       // Determine active color theme
       let theme = pulseThemes[pulseTheme];
       if (isLight) {
-        // Light mode styling: hospital white background with red or green trace
-        if (pulseTheme === 'red' || currentFleetStatus === 'DOWN') {
+        if (pulseTheme === 'red' || currentFleetStatus === 'BLACKOUT' || currentFleetStatus === 'ALERT') {
           theme = {
             line: '#e11d48',
             glow: 'rgba(225, 29, 72, 0.4)',
@@ -1761,9 +1805,9 @@
           };
         }
       } else {
-        if (currentFleetStatus === 'DOWN') {
+        if (currentFleetStatus === 'BLACKOUT') {
           theme = pulseThemes['red'];
-        } else if (currentFleetStatus === 'DEGRADED') {
+        } else if (currentFleetStatus === 'ALERT' || currentFleetStatus === 'DEGRADED') {
           theme = {
             line: '#f59e0b',
             glow: 'rgba(245, 158, 11, 0.45)',
@@ -1788,7 +1832,7 @@
       pulseCtx.stroke();
 
       // Draw the ECG Waveform with Erase Gap ahead of cursor
-      const eraseGap = 32;
+      const eraseGap = 28;
       const headX = curCursor;
       const tailX = (headX + eraseGap) % w;
 
@@ -1838,6 +1882,82 @@
 
       pulseCtx.restore();
 
+      // =======================================================
+      // LIVE MINI-ECG HEARTBEAT STRIPS FOR EVERY MONITORED SITE
+      // =======================================================
+      if (window.currentMonitors && window.currentMonitors.length > 0) {
+        window.currentMonitors.forEach(s => {
+          const cvs = document.getElementById('miniPulse_' + s.id);
+          if (!cvs) return;
+          const mctx = cvs.getContext('2d');
+          const mw = cvs.width;
+          const mh = cvs.height;
+          const mcy = mh / 2;
+
+          mctx.clearRect(0, 0, mw, mh);
+
+          // Subtle center guide line
+          mctx.lineWidth = 0.5;
+          mctx.strokeStyle = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+          mctx.beginPath();
+          mctx.moveTo(0, mcy);
+          mctx.lineTo(mw, mcy);
+          mctx.stroke();
+
+          mctx.lineWidth = 1.9;
+          mctx.lineCap = 'round';
+          mctx.lineJoin = 'round';
+
+          if (s.status === 'DOWN') {
+            // True Medical Flatline (Asystole)
+            mctx.strokeStyle = isLight ? '#e11d48' : '#f43f5e';
+            mctx.shadowColor = 'rgba(244, 63, 94, 0.65)';
+            mctx.shadowBlur = 7;
+            mctx.beginPath();
+            mctx.moveTo(0, mcy);
+            mctx.lineTo(mw, mcy);
+            mctx.stroke();
+            mctx.shadowBlur = 0;
+          } else if (s.status === 'DEGRADED') {
+            // Amber Arrhythmia / Tachycardia Pulse
+            mctx.strokeStyle = isLight ? '#d97706' : '#f59e0b';
+            mctx.shadowColor = 'rgba(245, 158, 11, 0.55)';
+            mctx.shadowBlur = 7;
+
+            const beatW = 56;
+            const scrollOffset = (timestamp * 0.08) % beatW;
+            mctx.beginPath();
+            for (let x = 0; x <= mw; x++) {
+              const phase = ((x + scrollOffset) % beatW) / beatW;
+              const defl = getEcgDeflection((phase * 1.25) % 1);
+              const y = mcy - defl * 8.5;
+              if (x === 0) mctx.moveTo(x, y);
+              else mctx.lineTo(x, y);
+            }
+            mctx.stroke();
+            mctx.shadowBlur = 0;
+          } else {
+            // Rhythmic Normal Sinus Heartbeat (UP)
+            mctx.strokeStyle = isLight ? '#059669' : '#10b981';
+            mctx.shadowColor = isLight ? 'rgba(5, 150, 105, 0.45)' : 'rgba(16, 185, 129, 0.7)';
+            mctx.shadowBlur = 7;
+
+            const beatW = 65; // Exactly 2 beats visible across 130px
+            const scrollOffset = (timestamp * 0.065) % beatW;
+            mctx.beginPath();
+            for (let x = 0; x <= mw; x++) {
+              const phase = ((x + scrollOffset) % beatW) / beatW;
+              const defl = getEcgDeflection(phase);
+              const y = mcy - defl * 8.5;
+              if (x === 0) mctx.moveTo(x, y);
+              else mctx.lineTo(x, y);
+            }
+            mctx.stroke();
+            mctx.shadowBlur = 0;
+          }
+        });
+      }
+
       requestAnimationFrame(animatePulse);
     }
 
@@ -1883,21 +2003,36 @@
       const vitalCondition = document.getElementById('vitalCondition');
       const heartIcon = document.getElementById('heartBeatIcon');
 
-      if (summary.down > 0) {
-        currentFleetStatus = 'DOWN';
+      if (summary.total > 0 && summary.up === 0) {
+        currentFleetStatus = 'BLACKOUT';
         if (card) { card.className = 'pulse-monitor-card down'; }
         if (rhythmBadge) {
-          rhythmBadge.innerText = 'ASYSTOLE / OUTAGE';
+          rhythmBadge.innerText = 'TOTAL ASYSTOLE';
           rhythmBadge.style.color = '#f87171';
           rhythmBadge.style.borderColor = 'rgba(244, 63, 94, 0.45)';
         }
         if (vitalBpmWrap) vitalBpmWrap.style.color = '#f87171';
         if (vitalBpm) vitalBpm.innerText = '00';
         if (vitalCondition) {
-          vitalCondition.innerText = `${summary.down} CRITICAL OUTAGE`;
+          vitalCondition.innerText = `${summary.down} CRITICAL OUTAGES`;
           vitalCondition.style.color = '#f87171';
         }
         if (heartIcon) heartIcon.innerText = '💔';
+      } else if (summary.down > 0) {
+        currentFleetStatus = 'ALERT';
+        if (card) { card.className = 'pulse-monitor-card down'; }
+        if (rhythmBadge) {
+          rhythmBadge.innerText = `INCIDENT ACTIVE (${summary.down} DOWN)`;
+          rhythmBadge.style.color = '#f87171';
+          rhythmBadge.style.borderColor = 'rgba(244, 63, 94, 0.45)';
+        }
+        if (vitalBpmWrap) vitalBpmWrap.style.color = '#f87171';
+        if (vitalBpm) vitalBpm.innerText = '84';
+        if (vitalCondition) {
+          vitalCondition.innerText = `${summary.up}/${summary.total} OPERATIONAL`;
+          vitalCondition.style.color = '#f87171';
+        }
+        if (heartIcon) heartIcon.innerText = '⚡';
       } else if (summary.degraded > 0) {
         currentFleetStatus = 'DEGRADED';
         if (card) { card.className = 'pulse-monitor-card degraded'; }
@@ -1907,9 +2042,9 @@
           rhythmBadge.style.borderColor = 'rgba(245, 158, 11, 0.45)';
         }
         if (vitalBpmWrap) vitalBpmWrap.style.color = '#fbbf24';
-        if (vitalBpm) vitalBpm.innerText = '118';
+        if (vitalBpm) vitalBpm.innerText = '96';
         if (vitalCondition) {
-          vitalCondition.innerText = 'ARRHYTHMIA';
+          vitalCondition.innerText = 'LATENCY DEGRADED';
           vitalCondition.style.color = '#fbbf24';
         }
         if (heartIcon) heartIcon.innerText = '⚡';
@@ -1932,9 +2067,10 @@
     }
 
     function renderTable(services, flashId = null) {
+      window.currentMonitors = services;
       const tbody = document.getElementById('servicesTableBody');
       if (services.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No monitored targets. Click Chaos Lab & Provisioning above to add one!</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No monitored targets. Click Chaos Lab & Provisioning above to add one!</td></tr>`;
         return;
       }
 
@@ -1948,6 +2084,15 @@
         } else if (s.status === 'DOWN') {
           statusBadge = `<span class="badge badge-down" title="${escapeHtml(s.history[s.history.length-1]?.reason || '')}"><span class="badge-dot pulse-red"></span> DOWN</span>`;
         }
+
+        // Live Mini-Heartbeat Strip for each site
+        const miniPulseCell = `
+          <td>
+            <div class="mini-pulse-wrap" title="${s.status === 'DOWN' ? 'Asystole Flatline' : (s.status === 'DEGRADED' ? 'Arrhythmia Telemetry' : 'Normal Sinus Heartbeat')}">
+              <canvas id="miniPulse_${s.id}" class="mini-pulse-canvas" width="130" height="26"></canvas>
+            </div>
+          </td>
+        `;
 
         // SSL Tag
         let sslTag = `<span class="ssl-tag ssl-plain">HTTP</span>`;
@@ -1991,6 +2136,7 @@
               </div>
             </td>
             <td>${statusBadge}</td>
+            ${miniPulseCell}
             <td>${sslTag}</td>
             <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.9rem;">${s.responseTimeMs}ms</td>
             <td><div class="history-row">${historyBars.join('')}</div></td>
