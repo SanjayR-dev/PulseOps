@@ -1,0 +1,19 @@
+# Dependencies & test artifacts
+node_modules
+app/node_modules
+app/test
+coverage
+npm-debug.log*
+
+# Git repository files
+.git
+.gitignore
+
+# Jenkins and environment configurations
+jenkins
+docs
+README.md
+
+# OS generated files
+.DS_Store
+Thumbs.db
