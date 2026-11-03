@@ -11,16 +11,20 @@ COPY app/package*.json ./
 # Install production dependencies only
 RUN npm ci --omit=dev
 
-# Copy application code into app/ directory
+# Copy application source code and public assets
 COPY app/server.js ./app/
+COPY app/checker.js ./app/
+COPY app/public/ ./app/public/
 
-# Configure environment and port
+# Build number argument and environment variable
+ARG BUILD_NUMBER=local
+ENV BUILD_NUMBER=$BUILD_NUMBER
 ENV NODE_ENV=production
 EXPOSE 3000
 
-# Healthcheck hitting /health
+# Container healthcheck hitting /health
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
-# Start Express server
+# Start the Sentinel server
 CMD ["node", "app/server.js"]

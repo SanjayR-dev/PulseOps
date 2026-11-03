@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        IMAGE = 'sanjayr8dev/devops-mini-app'
+        IMAGE = 'sanjayr8dev/uptime-monitor'
         CREDS = credentials('dockerhub-creds')
     }
 
@@ -27,8 +27,8 @@ pipeline {
 
         stage('Build image') {
             steps {
-                echo "===> Stage 3: Building Docker image (${IMAGE}:${BUILD_NUMBER} and ${IMAGE}:latest)"
-                sh 'docker build -t $IMAGE:$BUILD_NUMBER -t $IMAGE:latest .'
+                echo "===> Stage 3: Building Docker image with Build #${BUILD_NUMBER}"
+                sh 'docker build --build-arg BUILD_NUMBER=$BUILD_NUMBER -t $IMAGE:$BUILD_NUMBER -t $IMAGE:latest .'
             }
         }
 
@@ -46,11 +46,25 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "===> Stage 5: Deploying sibling container to host on port 3000"
-                sh '''
-                    docker rm -f devops-mini-app || true
-                    docker run -d --name devops-mini-app -p 3000:3000 --restart unless-stopped $IMAGE:latest
-                '''
+                echo "===> Stage 5: Deploying uptime-monitor sibling container to host port 3000"
+                script {
+                    def webhookEnv = ""
+                    try {
+                        withCredentials([string(credentialsId: 'alert-webhook-url', variable: 'HOOK_URL')]) {
+                            if (HOOK_URL && HOOK_URL.trim() != '') {
+                                webhookEnv = "-e ALERT_WEBHOOK_URL=\"${HOOK_URL}\""
+                                echo "[INFO] Detected 'alert-webhook-url' credential. Alerting is ENABLED."
+                            }
+                        }
+                    } catch (Exception e) {
+                        echo "[INFO] 'alert-webhook-url' credential not configured. Deploying without external webhooks."
+                    }
+
+                    sh """
+                        docker rm -f uptime-monitor devops-mini-app || true
+                        docker run -d --name uptime-monitor -p 3000:3000 --restart unless-stopped ${webhookEnv} ${IMAGE}:latest
+                    """
+                }
             }
         }
 
@@ -74,8 +88,8 @@ pipeline {
     post {
         success {
             echo "======================================================="
-            echo "Pipeline succeeded! Container 'devops-mini-app' is live."
-            echo "Access application at: http://localhost:3000"
+            echo "Pipeline succeeded! Container 'uptime-monitor' is live."
+            echo "Dashboard running at: http://localhost:3000"
             echo "======================================================="
         }
         failure {
@@ -89,4 +103,3 @@ pipeline {
         }
     }
 }
-

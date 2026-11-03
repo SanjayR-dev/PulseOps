@@ -1,7 +1,7 @@
 {
-  "name": "pulseops-app",
+  "name": "pulseops-sentinel",
   "version": "1.0.0",
-  "description": "PulseOps - DevOps Mini Project Node.js Express Application",
+  "description": "PulseOps Sentinel - Automated Uptime, Content Integrity & SSL Certificate Sentinel",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

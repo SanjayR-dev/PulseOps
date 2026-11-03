@@ -22,3 +22,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Keep running as root to avoid docker.sock permission denied issues
 USER root
+
