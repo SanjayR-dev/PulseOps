@@ -912,7 +912,7 @@
       <div class="lab-buttons">
         <button class="btn-preset primary" onclick="triggerFleetCheck()">⚡ Ping All Targets</button>
         <button class="btn-preset" onclick="addGooglePreset()">🌐 Add Google (SSL)</button>
-        <button class="btn-preset" onclick="addGitHubPreset()">🐙 Add GitHub API</button>
+        <button class="btn-preset" onclick="addCloudflarePreset()">☁️ Add Cloudflare DNS</button>
         <button class="btn-preset warning" onclick="addSilentFailPreset()">🕵️ Trigger 200 OK Mismatch</button>
         <button class="btn-preset danger" onclick="toggleCrashSim()">🚨 Flip Outage (Crash/Recover)</button>
       </div>
@@ -1606,16 +1606,16 @@
       fetchData();
     }
 
-    async function addGitHubPreset() {
+    async function addCloudflarePreset() {
       await fetch('/api/services', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: 'GitHub Production API',
-          url: 'https://api.github.com'
+          name: 'Cloudflare Anycast DNS',
+          url: 'https://1.1.1.1'
         })
       });
-      showToast('🐙', 'Added GitHub API with SSL Watchdog');
+      showToast('☁️', 'Added Cloudflare DNS with SSL Watchdog');
       playBeep('success');
       fetchData();
     }

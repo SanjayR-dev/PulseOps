@@ -80,17 +80,17 @@ function seedDefaults() {
         history: makeHistory('UP', 80, 'HTTP 200')
       },
       {
-        id: 'svc_github_api',
-        name: 'GitHub Production API',
-        url: 'https://api.github.com',
+        id: 'svc_cloudflare_dns',
+        name: 'Cloudflare Anycast DNS',
+        url: 'https://1.1.1.1',
         expectedKeyword: null,
-        maxLatencyMs: 1500,
+        maxLatencyMs: 1000,
         status: 'UP',
         previousStatus: 'UP',
-        responseTimeMs: 145,
+        responseTimeMs: 38,
         lastChecked: new Date().toISOString(),
-        ssl: { checked: true, valid: true, daysRemaining: 184, issuer: "DigiCert Global Root G2", expiryDate: '2027-05-15T12:00:00.000Z', error: null },
-        history: makeHistory('UP', 140, 'HTTP 200')
+        ssl: { checked: true, valid: true, daysRemaining: 180, issuer: "Cloudflare Inc ECC CA-3", expiryDate: '2027-05-15T12:00:00.000Z', error: null },
+        history: makeHistory('UP', 35, 'HTTP 200')
       },
       {
         id: 'svc_mock_outage',
