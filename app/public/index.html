@@ -9,22 +9,21 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #07090e;
-      --surface-1: rgba(18, 24, 38, 0.7);
-      --surface-2: rgba(26, 35, 54, 0.85);
-      --border: rgba(255, 255, 255, 0.08);
-      --border-focus: rgba(99, 102, 241, 0.4);
+      --bg: #06080e;
+      --surface-1: rgba(15, 22, 36, 0.75);
+      --surface-2: rgba(23, 32, 54, 0.9);
+      --border: rgba(255, 255, 255, 0.09);
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --primary: #6366f1;
       --primary-hover: #4f46e5;
       --accent: #38bdf8;
       --success: #10b981;
-      --success-bg: rgba(16, 185, 129, 0.12);
+      --success-glow: rgba(16, 185, 129, 0.35);
       --warning: #f59e0b;
-      --warning-bg: rgba(245, 158, 11, 0.12);
+      --warning-glow: rgba(245, 158, 11, 0.35);
       --danger: #f43f5e;
-      --danger-bg: rgba(244, 63, 94, 0.12);
+      --danger-glow: rgba(244, 63, 94, 0.35);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,11 +32,11 @@
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.12) 0, transparent 40%),
-        radial-gradient(circle at 90% 90%, rgba(56, 189, 248, 0.08) 0, transparent 45%),
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.15) 0, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.1) 0, transparent 45%),
         linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+      background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -45,9 +44,9 @@
     }
 
     .container {
-      max-width: 1320px;
+      max-width: 1360px;
       margin: 0 auto;
-      padding: 2rem 1.5rem;
+      padding: 1.75rem 1.5rem;
       width: 100%;
     }
 
@@ -56,8 +55,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
       border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
       gap: 1.25rem;
@@ -70,23 +69,24 @@
     }
 
     .brand-logo {
-      width: 48px;
-      height: 48px;
+      width: 50px;
+      height: 50px;
       background: linear-gradient(135deg, #6366f1, #38bdf8);
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
-      box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 1.6rem;
+      box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      position: relative;
     }
 
     .brand h1 {
-      font-size: 1.65rem;
+      font-size: 1.75rem;
       font-weight: 800;
       letter-spacing: -0.03em;
-      background: linear-gradient(120deg, #ffffff 40%, #a5b4fc 100%);
+      background: linear-gradient(120deg, #ffffff 30%, #a5b4fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -100,7 +100,7 @@
     .header-ctrls {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
     }
 
@@ -108,38 +108,38 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 0.45rem 0.95rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 0.5rem 1rem;
       border-radius: 9999px;
       font-size: 0.82rem;
-      font-weight: 600;
+      font-weight: 700;
       color: #34d399;
       font-family: 'JetBrains Mono', monospace;
     }
 
     .live-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       background: var(--success);
       border-radius: 50%;
-      box-shadow: 0 0 12px var(--success);
-      animation: pulse 1.8s infinite;
+      box-shadow: 0 0 14px var(--success);
+      animation: pulse 1.6s infinite;
     }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.3); }
+      50% { opacity: 0.3; transform: scale(1.4); }
     }
 
     .btn-top {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 0.45rem 0.95rem;
+      padding: 0.5rem 0.95rem;
       border-radius: 8px;
       font-size: 0.82rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -148,8 +148,70 @@
     }
 
     .btn-top:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-top.active {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: var(--primary);
+      color: #a5b4fc;
+    }
+
+    /* Live ECG Heartbeat Oscilloscope Canvas */
+    .radar-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .radar-canvas-wrap {
+      flex: 1;
+      min-width: 280px;
+      height: 52px;
+      position: relative;
+    }
+
+    #radarCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .radar-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .radar-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .radar-stat-lbl {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .radar-stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--accent);
     }
 
     /* KPI Summary Cards */
@@ -157,7 +219,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.75rem;
     }
 
     .kpi-card {
@@ -165,7 +227,7 @@
       border: 1px solid var(--border);
       backdrop-filter: blur(16px);
       border-radius: 16px;
-      padding: 1.3rem 1.4rem;
+      padding: 1.25rem 1.35rem;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -179,16 +241,16 @@
     }
 
     .kpi-label {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
 
     .kpi-value {
-      font-size: 2.2rem;
+      font-size: 2.1rem;
       font-weight: 800;
       letter-spacing: -0.04em;
       font-family: 'JetBrains Mono', monospace;
@@ -200,11 +262,105 @@
     .kpi-value.blue { color: var(--accent); }
     .kpi-value.purple { color: #c084fc; }
 
-    /* Interactive Tabs Navigation */
+    /* Interactive Fast Action Playground */
+    .lab-banner {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(56, 189, 248, 0.09));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .lab-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .lab-icon {
+      font-size: 2rem;
+    }
+
+    .lab-title {
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .lab-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .lab-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-preset {
+      padding: 0.5rem 0.95rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text);
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-preset:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .btn-preset.danger {
+      background: rgba(244, 63, 94, 0.2);
+      color: #fda4af;
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    .btn-preset.danger:hover {
+      background: rgba(244, 63, 94, 0.35);
+    }
+
+    .btn-preset.warning {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fde68a;
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-preset.warning:hover {
+      background: rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-preset.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .btn-preset.primary:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Tabs */
     .nav-tabs {
       display: flex;
       gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       border-bottom: 1px solid var(--border);
       padding-bottom: 0.75rem;
     }
@@ -216,7 +372,7 @@
       font-family: inherit;
       font-size: 0.92rem;
       font-weight: 700;
-      padding: 0.6rem 1.1rem;
+      padding: 0.6rem 1.15rem;
       border-radius: 8px;
       cursor: pointer;
       display: inline-flex;
@@ -236,92 +392,13 @@
       border: 1px solid rgba(99, 102, 241, 0.35);
     }
 
-    /* Fast Action Lab Banner */
-    .lab-banner {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(56, 189, 248, 0.08));
-      border: 1px solid rgba(99, 102, 241, 0.25);
-      border-radius: 14px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .lab-info {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .lab-icon {
-      font-size: 1.8rem;
-    }
-
-    .lab-title {
-      font-weight: 700;
-      font-size: 0.98rem;
-    }
-
-    .lab-desc {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-top: 0.15rem;
-    }
-
-    .lab-buttons {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    .btn-preset {
-      padding: 0.45rem 0.85rem;
-      border-radius: 7px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      transition: all 0.2s;
-    }
-
-    .btn-preset:hover {
-      background: rgba(255, 255, 255, 0.14);
-      border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .btn-preset.danger {
-      background: rgba(244, 63, 94, 0.18);
-      color: #fda4af;
-      border-color: rgba(244, 63, 94, 0.35);
-    }
-
-    .btn-preset.danger:hover {
-      background: rgba(244, 63, 94, 0.3);
-    }
-
-    .btn-preset.warning {
-      background: rgba(245, 158, 11, 0.18);
-      color: #fde68a;
-      border-color: rgba(245, 158, 11, 0.35);
-    }
-
-    .btn-preset.warning:hover {
-      background: rgba(245, 158, 11, 0.3);
-    }
-
-    /* Add Target Card */
+    /* Add Card */
     .add-card {
       background: var(--surface-1);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.75rem;
     }
 
     .add-header {
@@ -353,10 +430,10 @@
     }
 
     .input-ctrl {
-      background: rgba(7, 9, 14, 0.7);
+      background: rgba(6, 8, 14, 0.8);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 0.65rem 0.9rem;
+      padding: 0.7rem 0.95rem;
       color: var(--text);
       font-size: 0.9rem;
       font-family: inherit;
@@ -378,7 +455,7 @@
       font-weight: 700;
       font-size: 0.9rem;
       cursor: pointer;
-      height: 44px;
+      height: 46px;
       transition: background-color 0.2s;
     }
 
@@ -402,8 +479,8 @@
     }
 
     th {
-      padding: 1rem 1.3rem;
-      font-size: 0.74rem;
+      padding: 1.1rem 1.3rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
@@ -417,10 +494,20 @@
       border-bottom: 1px solid var(--border);
       font-size: 0.9rem;
       vertical-align: middle;
+      transition: background-color 0.4s ease;
     }
 
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(255, 255, 255, 0.015); }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .flash-pulse td {
+      animation: flashRow 1s ease-out;
+    }
+
+    @keyframes flashRow {
+      0% { background: rgba(16, 185, 129, 0.25); }
+      100% { background: transparent; }
+    }
 
     .target-title {
       font-weight: 700;
@@ -459,18 +546,27 @@
       background: var(--success-bg);
       color: #34d399;
       border: 1px solid rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 12px var(--success-glow);
     }
 
     .badge-degraded {
       background: var(--warning-bg);
       color: #fbbf24;
       border: 1px solid rgba(245, 158, 11, 0.3);
+      box-shadow: 0 0 12px var(--warning-glow);
     }
 
     .badge-down {
       background: var(--danger-bg);
       color: #f87171;
       border: 1px solid rgba(244, 63, 94, 0.3);
+      box-shadow: 0 0 12px var(--danger-glow);
+      animation: alertPulse 1.2s infinite;
+    }
+
+    @keyframes alertPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     .badge-pending {
@@ -479,7 +575,7 @@
       border: 1px solid rgba(148, 163, 184, 0.2);
     }
 
-    /* SSL Pill */
+    /* SSL Tag */
     .ssl-tag {
       display: inline-flex;
       align-items: center;
@@ -523,7 +619,7 @@
       transition: transform 0.15s;
     }
 
-    .hist-block:hover { transform: scaleY(1.3); }
+    .hist-block:hover { transform: scaleY(1.35); }
     .hist-up { background: var(--success); }
     .hist-degraded { background: var(--warning); }
     .hist-down { background: var(--danger); }
@@ -534,7 +630,7 @@
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 0.45rem 0.7rem;
+      padding: 0.45rem 0.75rem;
       border-radius: 6px;
       font-size: 0.8rem;
       font-weight: 700;
@@ -543,7 +639,8 @@
     }
 
     .btn-act:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
     }
 
     .btn-act.del { color: #f87171; }
@@ -576,7 +673,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0.75rem 1rem;
-      background: rgba(7, 9, 14, 0.6);
+      background: rgba(6, 8, 14, 0.7);
       border: 1px solid var(--border);
       border-radius: 8px;
       gap: 1rem;
@@ -594,10 +691,10 @@
       right: 2rem;
       background: var(--surface-2);
       border: 1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      padding: 1rem 1.25rem;
-      font-size: 0.88rem;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
+      padding: 1rem 1.4rem;
+      font-size: 0.9rem;
       display: none;
       align-items: center;
       gap: 0.75rem;
@@ -618,7 +715,7 @@
       text-align: center;
       font-size: 0.85rem;
       color: var(--text-muted);
-      background: rgba(7, 9, 14, 0.7);
+      background: rgba(6, 8, 14, 0.8);
     }
 
     .build-badge {
@@ -651,19 +748,39 @@
           <div class="live-dot"></div>
           <span id="countdownText">Refreshing in 10s</span>
         </div>
+        <button class="btn-top" id="audioToggleBtn" onclick="toggleAudio()">
+          <span id="audioIcon">🔇</span> Audio FX
+        </button>
         <button class="btn-top" onclick="testDiscordWebhook()">
           <span>🔔</span> Test Discord Alert
         </button>
-        <button class="btn-top" onclick="fetchData()">
-          <span>🔄</span> Refresh
+        <button class="btn-top" onclick="triggerFleetCheck()">
+          <span>⚡</span> Ping All Targets
         </button>
       </div>
     </header>
 
+    <!-- Live Heartbeat Oscilloscope Bar -->
+    <div class="radar-card">
+      <div class="radar-canvas-wrap">
+        <canvas id="radarCanvas"></canvas>
+      </div>
+      <div class="radar-meta">
+        <div class="radar-stat">
+          <span class="radar-stat-lbl">Fleet Status</span>
+          <span class="radar-stat-val" style="color: var(--success);" id="radarFleetStatus">OPERATIONAL</span>
+        </div>
+        <div class="radar-stat">
+          <span class="radar-stat-lbl">Heartbeat</span>
+          <span class="radar-stat-val" id="radarBpm">60 Hz</span>
+        </div>
+      </div>
+    </div>
+
     <!-- KPI Summary Grid -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <span class="kpi-label">Monitored Targets</span>
+        <span class="kpi-label">Active Monitors</span>
         <span class="kpi-value blue" id="statTotal">0</span>
       </div>
       <div class="kpi-card">
@@ -683,32 +800,33 @@
         <span class="kpi-value green" id="statUptime">100%</span>
       </div>
       <div class="kpi-card">
-        <span class="kpi-label">Avg Response</span>
+        <span class="kpi-label">Fleet Latency</span>
         <span class="kpi-value purple" id="statLatency">0ms</span>
       </div>
     </div>
 
-    <!-- Live Interview Lab Banner -->
+    <!-- Live Interview Demo Playground -->
     <div class="lab-banner">
       <div class="lab-info">
         <div class="lab-icon">⚡</div>
         <div>
-          <div class="lab-title">Live Interview Demo Playground</div>
-          <div class="lab-desc">Load real-world targets or trigger simulated incidents to showcase live Discord alerting.</div>
+          <div class="lab-title">Interactive SRE Demo Playground</div>
+          <div class="lab-desc">Instant 1-click presets to demonstrate every alert state live in presentations or interviews.</div>
         </div>
       </div>
       <div class="lab-buttons">
-        <button class="btn-preset" onclick="addGooglePreset()">🌐 Add Google.com (SSL)</button>
+        <button class="btn-preset primary" onclick="triggerFleetCheck()">⚡ Ping All Targets</button>
+        <button class="btn-preset" onclick="addGooglePreset()">🌐 Add Google (SSL)</button>
         <button class="btn-preset" onclick="addGitHubPreset()">🐙 Add GitHub API</button>
-        <button class="btn-preset warning" onclick="addSilentFailPreset()">🕵️ Trigger Silent 200 Mismatch</button>
-        <button class="btn-preset danger" onclick="toggleCrashSim()">🚨 Trigger 500 Outage</button>
+        <button class="btn-preset warning" onclick="addSilentFailPreset()">🕵️ Trigger 200 OK Mismatch</button>
+        <button class="btn-preset danger" onclick="toggleCrashSim()">🚨 Flip Outage (Crash/Recover)</button>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="nav-tabs">
       <button class="tab-btn active" id="tabMonitorsBtn" onclick="switchTab('monitors')">
-        <span>📊</span> Monitored Targets
+        <span>📊</span> Fleet Monitors
       </button>
       <button class="tab-btn" id="tabLogsBtn" onclick="switchTab('logs')">
         <span>📜</span> Live SRE Audit Stream (<span id="eventCountBadge">0</span>)
@@ -726,21 +844,21 @@
           <div class="form-grid">
             <div class="input-group">
               <label for="svcName">Target Name</label>
-              <input type="text" id="svcName" class="input-ctrl" placeholder="e.g. Stripe Webhook API" required>
+              <input type="text" id="svcName" class="input-ctrl" placeholder="e.g. Stripe Webhook Gateway" required>
             </div>
             <div class="input-group">
               <label for="svcUrl">URL Endpoint</label>
-              <input type="url" id="svcUrl" class="input-ctrl" placeholder="https://api.example.com/v1" required>
+              <input type="url" id="svcUrl" class="input-ctrl" placeholder="https://api.example.com/health" required>
             </div>
             <div class="input-group">
-              <label for="svcKeyword">Expected Keyword (Silent Fail Guard)</label>
-              <input type="text" id="svcKeyword" class="input-ctrl" placeholder="e.g. status or success">
+              <label for="svcKeyword">Expected Keyword (Silent Failure Guard)</label>
+              <input type="text" id="svcKeyword" class="input-ctrl" placeholder="e.g. status or ok">
             </div>
             <div class="input-group">
               <label for="svcLatency">Max Latency SLA (ms)</label>
               <input type="number" id="svcLatency" class="input-ctrl" placeholder="e.g. 1500">
             </div>
-            <button type="submit" class="btn-submit">Add Monitor</button>
+            <button type="submit" class="btn-submit">Add Target</button>
           </div>
         </form>
       </div>
@@ -753,8 +871,8 @@
               <th>Target & Endpoint</th>
               <th>Health Status</th>
               <th>SSL Watchdog</th>
-              <th>Latency</th>
-              <th>History (Last 20)</th>
+              <th>Response Time</th>
+              <th>History (Last 20 Checks)</th>
               <th>Last Checked</th>
               <th>Actions</th>
             </tr>
@@ -797,8 +915,117 @@
     let countdown = 10;
     let countdownTimer = null;
     let activeTab = 'monitors';
+    let audioEnabled = false;
+    let audioCtx = null;
 
-    async function fetchData() {
+    // Web Audio Synthesizer (Zero External Dependencies)
+    function playBeep(type) {
+      if (!audioEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+        if (type === 'success') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, now); // D5
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === 'danger') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now); // A3
+          osc.frequency.linearRampToValueAtTime(110, now + 0.25); // A2
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        }
+      } catch (e) {}
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const btn = document.getElementById('audioToggleBtn');
+      const icon = document.getElementById('audioIcon');
+      if (audioEnabled) {
+        btn.classList.add('active');
+        icon.innerText = '🔊';
+        showToast('🔊', 'Audio FX enabled! Synthesizing UI audio');
+        playBeep('success');
+      } else {
+        btn.classList.remove('active');
+        icon.innerText = '🔇';
+        showToast('🔇', 'Audio FX disabled');
+      }
+    }
+
+    // Oscilloscope Radar Simulation on Canvas
+    const canvas = document.getElementById('radarCanvas');
+    const ctx = canvas.getContext('2d');
+    let radarPoints = [];
+    let radarPhase = 0;
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawRadar() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+      const cy = h / 2;
+
+      // Draw faint grid line
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, cy);
+      ctx.lineTo(w, cy);
+      ctx.stroke();
+
+      // Draw pulse wave
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#10b981';
+      ctx.beginPath();
+
+      radarPhase += 0.04;
+      for (let x = 0; x < w; x += 3) {
+        // Create ECG-like blip in the center
+        let y = cy;
+        const norm = (x / w);
+        const dist = Math.abs(norm - ((radarPhase % 1)));
+        if (dist < 0.08) {
+          const spike = Math.sin((dist / 0.08) * Math.PI) * 18;
+          y = cy + (norm > (radarPhase % 1) ? -spike : spike);
+        } else {
+          y = cy + Math.sin(x * 0.03 + radarPhase * 3) * 2;
+        }
+
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      requestAnimationFrame(drawRadar);
+    }
+    drawRadar();
+
+    // Data Fetching & Sync
+    async function fetchData(triggerFlashId = null) {
       try {
         const [summaryRes, servicesRes, eventsRes] = await Promise.all([
           fetch('/api/summary'),
@@ -810,7 +1037,7 @@
           const summary = await summaryRes.json();
           const services = await servicesRes.json();
           updateSummary(summary);
-          renderTable(services);
+          renderTable(services, triggerFlashId);
         }
 
         if (eventsRes.ok) {
@@ -830,9 +1057,21 @@
       document.getElementById('statUptime').innerText = summary.uptimePercent + '%';
       document.getElementById('statLatency').innerText = summary.avgLatencyMs + 'ms';
       document.getElementById('buildNumberTag').innerText = '#' + (summary.buildNumber || 'local');
+
+      const fleetStatus = document.getElementById('radarFleetStatus');
+      if (summary.down > 0) {
+        fleetStatus.innerText = 'INCIDENT ACTIVE';
+        fleetStatus.style.color = 'var(--danger)';
+      } else if (summary.degraded > 0) {
+        fleetStatus.innerText = 'DEGRADED';
+        fleetStatus.style.color = 'var(--warning)';
+      } else {
+        fleetStatus.innerText = 'ALL OPERATIONAL';
+        fleetStatus.style.color = 'var(--success)';
+      }
     }
 
-    function renderTable(services) {
+    function renderTable(services, flashId = null) {
       const tbody = document.getElementById('servicesTableBody');
       if (services.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No monitored targets. Click any preset above or add one!</td></tr>`;
@@ -876,9 +1115,10 @@
         }
 
         const timeAgo = s.lastChecked ? formatTimeAgo(new Date(s.lastChecked)) : 'Pending';
+        const flashClass = flashId === s.id ? 'flash-pulse' : '';
 
         return `
-          <tr>
+          <tr class="${flashClass}">
             <td>
               <div class="target-title">
                 <span>${escapeHtml(s.name)}</span>
@@ -887,7 +1127,7 @@
             </td>
             <td>${statusBadge}</td>
             <td>${sslTag}</td>
-            <td style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.88rem;">${s.responseTimeMs}ms</td>
+            <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.9rem; color: #fff;">${s.responseTimeMs}ms</td>
             <td><div class="history-row">${historyBars.join('')}</div></td>
             <td style="color: var(--text-muted); font-size: 0.8rem;">${timeAgo}</td>
             <td>
@@ -951,12 +1191,15 @@
         });
 
         if (res.ok) {
+          const newSvc = await res.json();
           document.getElementById('addServiceForm').reset();
-          showToast('✅', `Added "${name}" to monitoring`);
-          fetchData();
+          showToast('✅', `Added "${name}" to fleet`);
+          playBeep('success');
+          fetchData(newSvc.id);
         } else {
           const err = await res.json();
           showToast('❌', err.error || 'Failed to add target');
+          playBeep('danger');
         }
       } catch (e) {
         showToast('❌', 'Network error');
@@ -965,8 +1208,25 @@
 
     async function checkServiceNow(id) {
       try {
-        showToast('⚡', 'Dispatching immediate check...');
-        await fetch(`/api/services/${id}/check`, { method: 'POST' });
+        showToast('⚡', 'Pinging target...');
+        const res = await fetch(`/api/services/${id}/check`, { method: 'POST' });
+        const updated = await res.json();
+        if (updated.status === 'DOWN') playBeep('danger');
+        else playBeep('success');
+        fetchData(id);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function triggerFleetCheck() {
+      try {
+        showToast('⚡', 'Pinging entire fleet in parallel...');
+        const res = await fetch('/api/services');
+        const services = await res.json();
+        await Promise.all(services.map(s => fetch(`/api/services/${s.id}/check`, { method: 'POST' })));
+        playBeep('success');
+        showToast('✅', 'Fleet ping complete!');
         fetchData();
       } catch (e) {
         console.error(e);
@@ -990,12 +1250,13 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: 'Google Production',
+          name: 'Google Production Search',
           url: 'https://www.google.com',
           expectedKeyword: 'Google'
         })
       });
       showToast('🌐', 'Added Google with SSL Watchdog');
+      playBeep('success');
       fetchData();
     }
 
@@ -1004,11 +1265,12 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: 'GitHub API',
+          name: 'GitHub Production API',
           url: 'https://api.github.com'
         })
       });
       showToast('🐙', 'Added GitHub API with SSL Watchdog');
+      playBeep('success');
       fetchData();
     }
 
@@ -1022,7 +1284,8 @@
           expectedKeyword: 'PAYMENT_SUCCESS'
         })
       });
-      showToast('🕵️', 'Added Silent Mismatch Target (flags 200 OK missing keyword)');
+      showToast('🕵️', 'Added Silent Mismatch Target (200 OK missing expected keyword)');
+      playBeep('warning');
       fetchData();
     }
 
@@ -1031,6 +1294,16 @@
         const res = await fetch('/api/mock/toggle', { method: 'POST' });
         const data = await res.json();
         showToast('⚡', data.message);
+        if (data.mockHealthy) playBeep('success');
+        else playBeep('danger');
+        
+        // Find mock target and check it immediately
+        const sRes = await fetch('/api/services');
+        const svcs = await sRes.json();
+        const mockSvc = svcs.find(s => s.url.includes('/api/mock/target'));
+        if (mockSvc) {
+          await fetch(`/api/services/${mockSvc.id}/check`, { method: 'POST' });
+        }
         fetchData();
       } catch (e) {
         console.error(e);
@@ -1044,8 +1317,10 @@
         const data = await res.json();
         if (res.ok) {
           showToast('✅', 'Discord test card fired successfully!');
+          playBeep('success');
         } else {
           showToast('⚠️', data.error || 'Webhook test failed');
+          playBeep('danger');
         }
       } catch (e) {
         showToast('❌', 'Error sending webhook test');
