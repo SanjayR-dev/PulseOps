@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PulseOps Sentinel • SRE Command Center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --bg: #06080e;
@@ -54,12 +57,16 @@
       --canvas-bg: #ffffff;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg);
-      background-image: 
+      background-image:
         radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0, transparent 45%),
         radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.08) 0, transparent 45%),
         linear-gradient(var(--bg-grid) 1px, transparent 1px),
@@ -168,8 +175,17 @@
     }
 
     @keyframes pulseDot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(1.4); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.3;
+        transform: scale(1.4);
+      }
     }
 
     .btn-top {
@@ -278,8 +294,15 @@
     }
 
     @keyframes fadeInPage {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Live Clinical ECG Heartbeat Telemetry Monitor */
@@ -404,7 +427,7 @@
       height: 125px;
       position: relative;
       background: var(--canvas-bg);
-      background-image: 
+      background-image:
         linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
         linear-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px),
@@ -417,7 +440,7 @@
     }
 
     body.light-mode .pulse-canvas-wrap {
-      background-image: 
+      background-image:
         linear-gradient(rgba(2, 132, 199, 0.06) 1px, transparent 1px),
         linear-gradient(90deg, rgba(2, 132, 199, 0.06) 1px, transparent 1px),
         linear-gradient(rgba(2, 132, 199, 0.14) 1px, transparent 1px),
@@ -479,11 +502,25 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    .kpi-value.green { color: var(--success); }
-    .kpi-value.amber { color: var(--warning); }
-    .kpi-value.red { color: var(--danger); }
-    .kpi-value.blue { color: var(--accent); }
-    .kpi-value.purple { color: #c084fc; }
+    .kpi-value.green {
+      color: var(--success);
+    }
+
+    .kpi-value.amber {
+      color: var(--warning);
+    }
+
+    .kpi-value.red {
+      color: var(--danger);
+    }
+
+    .kpi-value.blue {
+      color: var(--accent);
+    }
+
+    .kpi-value.purple {
+      color: #c084fc;
+    }
 
     /* Interactive Fast Action Playground Banner */
     .lab-banner {
@@ -712,33 +749,133 @@
       transition: background-color 0.3s ease;
     }
 
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
 
     body.light-mode tr:hover td {
       background: rgba(15, 23, 42, 0.02);
     }
 
-    /* Red Pulsating Outage Row */
+    /* Continuous Seamless Pulsating Rows (Unified Ribbon, Zero Block Dividers) */
+    tr.row-up td {
+      background: rgba(16, 185, 129, 0.04) !important;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.22) !important;
+      animation: rowUpGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes rowUpGlow {
+      0%, 100% {
+        background: rgba(16, 185, 129, 0.03) !important;
+      }
+      50% {
+        background: rgba(16, 185, 129, 0.13) !important;
+      }
+    }
+
+    body.light-mode tr.row-up td {
+      background: rgba(5, 150, 105, 0.03) !important;
+      border-bottom: 1px solid rgba(5, 150, 105, 0.18) !important;
+      animation: rowUpGlowLight 3s ease-in-out infinite;
+    }
+
+    @keyframes rowUpGlowLight {
+      0%, 100% {
+        background: rgba(5, 150, 105, 0.02) !important;
+      }
+      50% {
+        background: rgba(5, 150, 105, 0.08) !important;
+      }
+    }
+
+    tr.row-up:hover td {
+      background: rgba(16, 185, 129, 0.18) !important;
+    }
+
+    body.light-mode tr.row-up:hover td {
+      background: rgba(5, 150, 105, 0.12) !important;
+    }
+
+    /* Amber Pulsating Degraded Row */
+    tr.row-degraded td {
+      background: rgba(245, 158, 11, 0.06) !important;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.3) !important;
+      animation: rowDegradedGlow 2.2s ease-in-out infinite;
+    }
+
+    @keyframes rowDegradedGlow {
+      0%, 100% {
+        background: rgba(245, 158, 11, 0.04) !important;
+      }
+      50% {
+        background: rgba(245, 158, 11, 0.18) !important;
+      }
+    }
+
+    body.light-mode tr.row-degraded td {
+      background: rgba(217, 119, 6, 0.04) !important;
+      border-bottom: 1px solid rgba(217, 119, 6, 0.25) !important;
+      animation: rowDegradedGlowLight 2.2s ease-in-out infinite;
+    }
+
+    @keyframes rowDegradedGlowLight {
+      0%, 100% {
+        background: rgba(217, 119, 6, 0.02) !important;
+      }
+      50% {
+        background: rgba(217, 119, 6, 0.1) !important;
+      }
+    }
+
+    tr.row-degraded:hover td {
+      background: rgba(245, 158, 11, 0.22) !important;
+    }
+
+    body.light-mode tr.row-degraded:hover td {
+      background: rgba(217, 119, 6, 0.15) !important;
+    }
+
+    /* Red Pulsating Outage Row (Unified Ribbon, Zero Box-Shadow Dividers) */
     tr.row-down td {
-      background: rgba(244, 63, 94, 0.09) !important;
+      background: rgba(244, 63, 94, 0.08) !important;
       border-bottom: 1px solid rgba(244, 63, 94, 0.35) !important;
-      animation: rowDownGlow 1.8s ease-in-out infinite;
+      animation: rowDownGlow 1.6s ease-in-out infinite;
     }
 
     @keyframes rowDownGlow {
       0%, 100% {
-        background: rgba(244, 63, 94, 0.07) !important;
-        box-shadow: inset 0 0 10px rgba(244, 63, 94, 0.08);
+        background: rgba(244, 63, 94, 0.06) !important;
       }
       50% {
         background: rgba(244, 63, 94, 0.22) !important;
-        box-shadow: inset 0 0 25px rgba(244, 63, 94, 0.35), 0 0 15px rgba(244, 63, 94, 0.2);
+      }
+    }
+
+    body.light-mode tr.row-down td {
+      background: rgba(225, 29, 72, 0.05) !important;
+      border-bottom: 1px solid rgba(225, 29, 72, 0.3) !important;
+      animation: rowDownGlowLight 1.6s ease-in-out infinite;
+    }
+
+    @keyframes rowDownGlowLight {
+      0%, 100% {
+        background: rgba(225, 29, 72, 0.04) !important;
+      }
+      50% {
+        background: rgba(225, 29, 72, 0.16) !important;
       }
     }
 
     tr.row-down:hover td {
-      background: rgba(244, 63, 94, 0.25) !important;
+      background: rgba(244, 63, 94, 0.28) !important;
+    }
+
+    body.light-mode tr.row-down:hover td {
+      background: rgba(225, 29, 72, 0.2) !important;
     }
 
     .flash-pulse td {
@@ -746,8 +883,13 @@
     }
 
     @keyframes flashRow {
-      0% { background: rgba(16, 185, 129, 0.25); }
-      100% { background: transparent; }
+      0% {
+        background: rgba(16, 185, 129, 0.25);
+      }
+
+      100% {
+        background: transparent;
+      }
     }
 
     .target-title {
@@ -799,11 +941,14 @@
     }
 
     @keyframes badgeUpBreathe {
-      0%, 100% {
+
+      0%,
+      100% {
         box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
         border-color: rgba(16, 185, 129, 0.35);
         transform: scale(1);
       }
+
       50% {
         box-shadow: 0 0 22px rgba(16, 185, 129, 0.7), inset 0 0 10px rgba(16, 185, 129, 0.25);
         border-color: #34d399;
@@ -828,10 +973,13 @@
     }
 
     @keyframes badgeDownAlert {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
         box-shadow: 0 0 12px rgba(244, 63, 94, 0.3);
       }
+
       50% {
         transform: scale(1.06);
         box-shadow: 0 0 26px rgba(244, 63, 94, 0.85), inset 0 0 10px rgba(244, 63, 94, 0.35);
@@ -855,8 +1003,16 @@
     }
 
     @keyframes badgeDegradedPulse {
-      0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.2); }
-      50% { box-shadow: 0 0 18px rgba(245, 158, 11, 0.55); color: #fde68a; }
+
+      0%,
+      100% {
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.2);
+      }
+
+      50% {
+        box-shadow: 0 0 18px rgba(245, 158, 11, 0.55);
+        color: #fde68a;
+      }
     }
 
     .badge-dot {
@@ -878,8 +1034,17 @@
     }
 
     @keyframes dotPulseGreen {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.35; transform: scale(1.4); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.35;
+        transform: scale(1.4);
+      }
     }
 
     .badge-dot.pulse-red {
@@ -889,8 +1054,17 @@
     }
 
     @keyframes dotPulseRed {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.2; transform: scale(1.5); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.2;
+        transform: scale(1.5);
+      }
     }
 
     .badge-dot.pulse-amber {
@@ -900,8 +1074,15 @@
     }
 
     @keyframes dotPulseAmber {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
     }
 
     .badge-pending {
@@ -970,11 +1151,9 @@
       transform: scaleY(1.4);
     }
 
-    .hist-up { background: var(--success); }
-    .hist-degraded { background: var(--warning); }
-    .hist-down { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
-    .hist-empty { background: rgba(255, 255, 255, 0.08); }
-    body.light-mode .hist-empty { background: rgba(0, 0, 0, 0.08); }
+    .hist-up {
+      background: var(--success);
+    }
 
     /* Table Mini-Heartbeat Strip */
     .mini-pulse-wrap {
@@ -1008,6 +1187,23 @@
       width: 100%;
       height: 100%;
       display: block;
+    }
+
+    .hist-degraded {
+      background: var(--warning);
+    }
+
+    .hist-down {
+      background: var(--danger);
+      box-shadow: 0 0 6px var(--danger);
+    }
+
+    .hist-empty {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    body.light-mode .hist-empty {
+      background: rgba(0, 0, 0, 0.08);
     }
 
     .btn-act {
@@ -1079,10 +1275,23 @@
       border-color: rgba(0, 0, 0, 0.08);
     }
 
-    .log-item.success { border-left-color: var(--success); }
-    .log-item.warning { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.08); }
-    .log-item.danger { border-left-color: var(--danger); background: rgba(244, 63, 94, 0.08); }
-    .log-item.info { border-left-color: var(--accent); }
+    .log-item.success {
+      border-left-color: var(--success);
+    }
+
+    .log-item.warning {
+      border-left-color: var(--warning);
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .log-item.danger {
+      border-left-color: var(--danger);
+      background: rgba(244, 63, 94, 0.08);
+    }
+
+    .log-item.info {
+      border-left-color: var(--accent);
+    }
 
     /* CI/CD Pipeline Telemetry Card */
     .pipeline-grid {
@@ -1198,6 +1407,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="container">
@@ -1265,8 +1475,10 @@
               <span class="telem-pill">LEAD II</span>
               <span class="telem-pill">25 mm/s</span>
               <span class="telem-pill">10 mm/mV</span>
-              <span class="telem-pill" id="rhythmBadge" style="color: #34d399; border-color: rgba(16, 185, 129, 0.4);">NORMAL SINUS</span>
-              <button class="telem-pill" id="colorThemeBtn" onclick="togglePulseColorTheme()" style="cursor: pointer;" title="Toggle trace color">🎨 Style: <span id="pulseThemeName">Neon Emerald</span></button>
+              <span class="telem-pill" id="rhythmBadge"
+                style="color: #34d399; border-color: rgba(16, 185, 129, 0.4);">NORMAL SINUS</span>
+              <button class="telem-pill" id="colorThemeBtn" onclick="togglePulseColorTheme()" style="cursor: pointer;"
+                title="Toggle trace color">🎨 Style: <span id="pulseThemeName">Neon Emerald</span></button>
             </div>
           </div>
           <div class="pulse-vitals">
@@ -1351,7 +1563,8 @@
           <div class="lab-icon">⚡</div>
           <div>
             <div class="lab-title">Interactive Chaos Engineering Playground</div>
-            <div class="lab-desc">Instant 1-click presets to trigger live outages, test silent 200 OK failures, and fire webhook alerts.</div>
+            <div class="lab-desc">Instant 1-click presets to trigger live outages, test silent 200 OK failures, and fire
+              webhook alerts.</div>
           </div>
         </div>
         <div class="lab-buttons">
@@ -1397,17 +1610,22 @@
     <!-- ========================================== -->
     <div id="pageLogs" class="page-view">
       <div class="stream-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
           <div>
-            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text);">📡 Real-time SRE Incident Audit Stream</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Immutable rolling event ledger (Last 60 events)</span>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text);">📡 Real-time SRE Incident Audit Stream
+            </h3>
+            <span
+              style="font-size: 0.8rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Immutable
+              rolling event ledger (Last 60 events)</span>
           </div>
           <div style="display: flex; gap: 0.5rem;">
             <button class="btn-act" onclick="fetchData()">🔄 Refresh Stream</button>
           </div>
         </div>
         <div class="stream-feed" id="eventStreamContainer">
-          <div style="color: var(--text-muted); text-align: center; padding: 2rem;">Connecting to SRE event stream...</div>
+          <div style="color: var(--text-muted); text-align: center; padding: 2rem;">Connecting to SRE event stream...
+          </div>
         </div>
       </div>
     </div>
@@ -1417,8 +1635,10 @@
     <!-- ========================================== -->
     <div id="pagePipeline" class="page-view">
       <div class="stream-card" style="margin-bottom: 1.5rem;">
-        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text);">🚀 Jenkins Declarative CI/CD Pipeline Stages</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Automated Git push trigger ➔ Docker container build ➔ Live zero-downtime sibling deployment.</p>
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text);">🚀 Jenkins
+          Declarative CI/CD Pipeline Stages</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Automated Git push trigger ➔
+          Docker container build ➔ Live zero-downtime sibling deployment.</p>
 
         <div class="pipeline-grid">
           <div class="pipeline-stage-card passed">
@@ -1463,19 +1683,24 @@
       <div class="kpi-grid">
         <div class="kpi-card">
           <span class="kpi-label">Active Image</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: var(--accent);">sanjayr8dev/uptime-monitor:latest</span>
+          <span
+            style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: var(--accent);">sanjayr8dev/uptime-monitor:latest</span>
         </div>
         <div class="kpi-card">
           <span class="kpi-label">Deployment Architecture</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: var(--success);">Docker Socket (Sibling Containers)</span>
+          <span
+            style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: var(--success);">Docker
+            Socket (Sibling Containers)</span>
         </div>
         <div class="kpi-card">
           <span class="kpi-label">Jenkins Orchestrator</span>
-          <a href="http://localhost:8080" target="_blank" style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: #a5b4fc; text-decoration: underline;">http://localhost:8080</a>
+          <a href="http://localhost:8080" target="_blank"
+            style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: #a5b4fc; text-decoration: underline;">http://localhost:8080</a>
         </div>
         <div class="kpi-card">
           <span class="kpi-label">Source Repository</span>
-          <a href="https://github.com/SanjayR-dev/PulseOps" target="_blank" style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: #a5b4fc; text-decoration: underline;">SanjayR-dev/PulseOps</a>
+          <a href="https://github.com/SanjayR-dev/PulseOps" target="_blank"
+            style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: #a5b4fc; text-decoration: underline;">SanjayR-dev/PulseOps</a>
         </div>
       </div>
     </div>
@@ -1588,7 +1813,7 @@
           osc.start(now);
           osc.stop(now + 0.25);
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     function toggleAudio() {
@@ -1722,7 +1947,7 @@
 
         osc.start(now);
         osc.stop(now + 0.065);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     function animatePulse(timestamp) {
@@ -2080,9 +2305,9 @@
         if (s.status === 'UP') {
           statusBadge = `<span class="badge badge-up"><span class="badge-dot pulse-green"></span> UP</span>`;
         } else if (s.status === 'DEGRADED') {
-          statusBadge = `<span class="badge badge-degraded" title="${escapeHtml(s.history[s.history.length-1]?.reason || '')}"><span class="badge-dot pulse-amber"></span> DEGRADED</span>`;
+          statusBadge = `<span class="badge badge-degraded" title="${escapeHtml(s.history[s.history.length - 1]?.reason || '')}"><span class="badge-dot pulse-amber"></span> DEGRADED</span>`;
         } else if (s.status === 'DOWN') {
-          statusBadge = `<span class="badge badge-down" title="${escapeHtml(s.history[s.history.length-1]?.reason || '')}"><span class="badge-dot pulse-red"></span> DOWN</span>`;
+          statusBadge = `<span class="badge badge-down" title="${escapeHtml(s.history[s.history.length - 1]?.reason || '')}"><span class="badge-dot pulse-red"></span> DOWN</span>`;
         }
 
         // Live Mini-Heartbeat Strip for each site
@@ -2125,7 +2350,7 @@
 
         const timeAgo = s.lastChecked ? formatTimeAgo(new Date(s.lastChecked)) : 'Pending';
         const flashClass = flashId === s.id ? 'flash-pulse' : '';
-        const rowStateClass = s.status === 'DOWN' ? 'row-down' : (s.status === 'DEGRADED' ? 'row-degraded' : '');
+        const rowStateClass = s.status === 'DOWN' ? 'row-down' : (s.status === 'DEGRADED' ? 'row-degraded' : 'row-up');
 
         return `
           <tr class="${flashClass} ${rowStateClass}">
@@ -2296,7 +2521,7 @@
         showToast('⚡', data.message);
         if (data.mockHealthy) playBeep('success');
         else playBeep('danger');
-        
+
         const sRes = await fetch('/api/services');
         const svcs = await sRes.json();
         const mockSvc = svcs.find(s => s.url.includes('/api/mock/target'));
@@ -2378,4 +2603,5 @@
     });
   </script>
 </body>
+
 </html>
