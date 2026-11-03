@@ -6,12 +6,13 @@
   <title>PulseOps Sentinel • SRE Command Center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #06080e;
-      --surface-1: rgba(15, 22, 36, 0.75);
-      --surface-2: rgba(23, 32, 54, 0.9);
+      --bg-grid: rgba(255, 255, 255, 0.02);
+      --surface-1: rgba(15, 22, 36, 0.78);
+      --surface-2: rgba(23, 32, 54, 0.92);
       --border: rgba(255, 255, 255, 0.09);
       --text: #f8fafc;
       --text-muted: #94a3b8;
@@ -24,6 +25,33 @@
       --warning-glow: rgba(245, 158, 11, 0.35);
       --danger: #f43f5e;
       --danger-glow: rgba(244, 63, 94, 0.35);
+      --card-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+      --table-header-bg: rgba(11, 15, 25, 0.65);
+      --nav-bg: rgba(15, 22, 36, 0.85);
+      --canvas-bg: #03070b;
+    }
+
+    body.light-mode {
+      --bg: #f8fafc;
+      --bg-grid: rgba(0, 0, 0, 0.035);
+      --surface-1: #ffffff;
+      --surface-2: #f1f5f9;
+      --border: rgba(15, 23, 42, 0.09);
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --accent: #0284c7;
+      --success: #059669;
+      --success-glow: rgba(5, 150, 105, 0.25);
+      --warning: #d97706;
+      --warning-glow: rgba(217, 119, 6, 0.25);
+      --danger: #e11d48;
+      --danger-glow: rgba(225, 29, 72, 0.25);
+      --card-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
+      --table-header-bg: #f1f5f9;
+      --nav-bg: rgba(255, 255, 255, 0.95);
+      --canvas-bg: #ffffff;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,21 +60,22 @@
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg);
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.15) 0, transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.1) 0, transparent 45%),
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.08) 0, transparent 45%),
+        linear-gradient(var(--bg-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
       background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
       color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: background-color 0.25s, color 0.25s;
     }
 
     .container {
-      max-width: 1360px;
+      max-width: 1380px;
       margin: 0 auto;
-      padding: 1.75rem 1.5rem;
+      padding: 1.5rem 1.5rem;
       width: 100%;
     }
 
@@ -55,7 +84,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       padding-bottom: 1.25rem;
       border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
@@ -79,14 +108,19 @@
       font-size: 1.6rem;
       box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.25);
-      position: relative;
     }
 
     .brand h1 {
-      font-size: 1.75rem;
+      font-size: 1.7rem;
       font-weight: 800;
       letter-spacing: -0.03em;
       background: linear-gradient(120deg, #ffffff 30%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.light-mode .brand h1 {
+      background: linear-gradient(120deg, #0f172a 30%, #4f46e5 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -100,7 +134,7 @@
     .header-ctrls {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.65rem;
       flex-wrap: wrap;
     }
 
@@ -110,46 +144,56 @@
       gap: 0.5rem;
       background: rgba(16, 185, 129, 0.12);
       border: 1px solid rgba(16, 185, 129, 0.35);
-      padding: 0.5rem 1rem;
+      padding: 0.45rem 0.9rem;
       border-radius: 9999px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       color: #34d399;
       font-family: 'JetBrains Mono', monospace;
     }
 
-    .live-dot {
-      width: 9px;
-      height: 9px;
-      background: var(--success);
-      border-radius: 50%;
-      box-shadow: 0 0 14px var(--success);
-      animation: pulse 1.6s infinite;
+    body.light-mode .live-badge {
+      background: rgba(5, 150, 105, 0.1);
+      border-color: rgba(5, 150, 105, 0.3);
+      color: #059669;
     }
 
-    @keyframes pulse {
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--success);
+      animation: pulseDot 1.6s infinite;
+    }
+
+    @keyframes pulseDot {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.3; transform: scale(1.4); }
     }
 
     .btn-top {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--surface-1);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 0.5rem 0.95rem;
+      padding: 0.5rem 0.9rem;
       border-radius: 8px;
       font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
       transition: all 0.2s;
     }
 
     .btn-top:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: var(--surface-2);
       border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    body.light-mode .btn-top:hover {
+      border-color: rgba(0, 0, 0, 0.2);
     }
 
     .btn-top.active {
@@ -158,26 +202,107 @@
       color: #a5b4fc;
     }
 
+    body.light-mode .btn-top.active {
+      background: rgba(79, 70, 229, 0.15);
+      color: #4f46e5;
+    }
+
+    /* Multi-Page Navigation Bar */
+    .app-nav-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--nav-bg);
+      padding: 0.45rem 0.55rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--card-shadow);
+      overflow-x: auto;
+    }
+
+    .app-nav-item {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.6rem 1.15rem;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .app-nav-item:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    body.light-mode .app-nav-item:hover {
+      background: rgba(15, 23, 42, 0.05);
+    }
+
+    .app-nav-item.active {
+      background: var(--primary);
+      color: #ffffff !important;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+    }
+
+    .nav-badge {
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+    }
+
+    .app-nav-item.active .nav-badge {
+      background: rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+
+    /* Page Views */
+    .page-view {
+      display: none;
+    }
+
+    .page-view.active {
+      display: block;
+      animation: fadeInPage 0.22s ease-out;
+    }
+
+    @keyframes fadeInPage {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     /* Live Clinical ECG Heartbeat Telemetry Monitor */
     .pulse-monitor-card {
       background: #04090e;
       border: 1px solid rgba(16, 185, 129, 0.28);
       border-radius: 16px;
       padding: 1.15rem 1.4rem;
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.5rem;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), inset 0 0 50px rgba(0, 0, 0, 0.75);
-      transition: border-color 0.3s;
+      box-shadow: var(--card-shadow);
+      transition: border-color 0.3s, background-color 0.3s;
+    }
+
+    body.light-mode .pulse-monitor-card {
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.12);
     }
 
     .pulse-monitor-card.down {
-      border-color: rgba(244, 63, 94, 0.45);
-      box-shadow: 0 10px 35px rgba(244, 63, 94, 0.15), inset 0 0 50px rgba(0, 0, 0, 0.75);
-    }
-
-    .pulse-monitor-card.degraded {
-      border-color: rgba(245, 158, 11, 0.45);
+      border-color: rgba(244, 63, 94, 0.5) !important;
+      box-shadow: 0 10px 35px rgba(244, 63, 94, 0.2) !important;
     }
 
     .pulse-monitor-header {
@@ -187,7 +312,7 @@
       margin-bottom: 0.75rem;
       flex-wrap: wrap;
       gap: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid var(--border);
       padding-bottom: 0.75rem;
     }
 
@@ -204,7 +329,7 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
       font-family: 'JetBrains Mono', monospace;
-      color: #fff;
+      color: var(--text);
       display: flex;
       align-items: center;
       gap: 0.45rem;
@@ -222,11 +347,15 @@
       font-family: 'JetBrains Mono', monospace;
       padding: 0.2rem 0.55rem;
       border-radius: 4px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
       color: var(--text-muted);
       font-weight: 700;
-      letter-spacing: 0.04em;
+    }
+
+    body.light-mode .telem-pill {
+      background: #f1f5f9;
+      color: #475569;
     }
 
     .pulse-vitals {
@@ -272,9 +401,9 @@
 
     .pulse-canvas-wrap {
       width: 100%;
-      height: 130px;
+      height: 125px;
       position: relative;
-      background: #03070b;
+      background: var(--canvas-bg);
       background-image: 
         linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
@@ -287,6 +416,16 @@
       box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8);
     }
 
+    body.light-mode .pulse-canvas-wrap {
+      background-image: 
+        linear-gradient(rgba(2, 132, 199, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(2, 132, 199, 0.06) 1px, transparent 1px),
+        linear-gradient(rgba(2, 132, 199, 0.14) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(2, 132, 199, 0.14) 1px, transparent 1px);
+      border-color: rgba(2, 132, 199, 0.2);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.04);
+    }
+
     #pulseCanvas {
       width: 100%;
       height: 100%;
@@ -296,40 +435,45 @@
     /* KPI Summary Cards */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.1rem;
-      margin-bottom: 1.75rem;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .kpi-card {
       background: var(--surface-1);
       border: 1px solid var(--border);
       backdrop-filter: blur(16px);
-      border-radius: 16px;
-      padding: 1.25rem 1.35rem;
+      border-radius: 14px;
+      padding: 1.15rem 1.25rem;
       display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--card-shadow);
       transition: transform 0.2s, border-color 0.2s;
     }
 
     .kpi-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    body.light-mode .kpi-card:hover {
+      border-color: rgba(0, 0, 0, 0.15);
     }
 
     .kpi-label {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
       font-weight: 700;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
     }
 
     .kpi-value {
-      font-size: 2.1rem;
+      font-size: 1.95rem;
       font-weight: 800;
       letter-spacing: -0.04em;
       font-family: 'JetBrains Mono', monospace;
@@ -341,18 +485,24 @@
     .kpi-value.blue { color: var(--accent); }
     .kpi-value.purple { color: #c084fc; }
 
-    /* Interactive Fast Action Playground */
+    /* Interactive Fast Action Playground Banner */
     .lab-banner {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(56, 189, 248, 0.09));
       border: 1px solid rgba(99, 102, 241, 0.3);
       border-radius: 16px;
       padding: 1.25rem 1.5rem;
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 1rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    body.light-mode .lab-banner {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(2, 132, 199, 0.06));
+      border-color: rgba(79, 70, 229, 0.2);
     }
 
     .lab-info {
@@ -379,36 +529,49 @@
 
     .lab-buttons {
       display: flex;
-      align-items: center;
-      gap: 0.65rem;
+      gap: 0.5rem;
       flex-wrap: wrap;
     }
 
     .btn-preset {
-      padding: 0.5rem 0.95rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.9rem;
       border-radius: 8px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.07);
-      color: var(--text);
-      transition: all 0.2s;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
+      transition: all 0.2s;
+    }
+
+    body.light-mode .btn-preset {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.12);
+      color: #0f172a;
     }
 
     .btn-preset:hover {
       background: rgba(255, 255, 255, 0.16);
-      border-color: rgba(255, 255, 255, 0.25);
       transform: translateY(-1px);
+    }
+
+    body.light-mode .btn-preset:hover {
+      background: #f1f5f9;
     }
 
     .btn-preset.danger {
       background: rgba(244, 63, 94, 0.2);
+      border-color: rgba(244, 63, 94, 0.45);
       color: #fda4af;
-      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    body.light-mode .btn-preset.danger {
+      background: rgba(225, 29, 72, 0.12);
+      color: #e11d48;
     }
 
     .btn-preset.danger:hover {
@@ -417,12 +580,13 @@
 
     .btn-preset.warning {
       background: rgba(245, 158, 11, 0.2);
+      border-color: rgba(245, 158, 11, 0.45);
       color: #fde68a;
-      border-color: rgba(245, 158, 11, 0.4);
     }
 
-    .btn-preset.warning:hover {
-      background: rgba(245, 158, 11, 0.35);
+    body.light-mode .btn-preset.warning {
+      background: rgba(217, 119, 6, 0.12);
+      color: #d97706;
     }
 
     .btn-preset.primary {
@@ -435,49 +599,14 @@
       background: var(--primary-hover);
     }
 
-    /* Tabs */
-    .nav-tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.75rem;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-family: inherit;
-      font-size: 0.92rem;
-      font-weight: 700;
-      padding: 0.6rem 1.15rem;
-      border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-    }
-
-    .tab-btn:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .tab-btn.active {
-      color: #fff;
-      background: rgba(99, 102, 241, 0.18);
-      border: 1px solid rgba(99, 102, 241, 0.35);
-    }
-
     /* Add Card */
     .add-card {
       background: var(--surface-1);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 1.5rem;
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--card-shadow);
     }
 
     .add-header {
@@ -520,9 +649,15 @@
       transition: all 0.2s;
     }
 
+    body.light-mode .input-ctrl {
+      background: #f8fafc;
+      border-color: rgba(15, 23, 42, 0.12);
+      color: #0f172a;
+    }
+
     .input-ctrl:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
     }
 
     .btn-submit {
@@ -548,7 +683,8 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       overflow-x: auto;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--card-shadow);
     }
 
     table {
@@ -558,26 +694,30 @@
     }
 
     th {
-      padding: 1.1rem 1.3rem;
+      padding: 1rem 1.3rem;
       font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
       border-bottom: 1px solid var(--border);
-      background: rgba(11, 15, 25, 0.6);
+      background: var(--table-header-bg);
       font-weight: 700;
     }
 
     td {
-      padding: 1.15rem 1.3rem;
+      padding: 1.1rem 1.3rem;
       border-bottom: 1px solid var(--border);
       font-size: 0.9rem;
       vertical-align: middle;
-      transition: background-color 0.4s ease;
+      transition: background-color 0.3s ease;
     }
 
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    body.light-mode tr:hover td {
+      background: rgba(15, 23, 42, 0.02);
+    }
 
     /* Red Pulsating Outage Row */
     tr.row-down td {
@@ -601,12 +741,6 @@
       background: rgba(244, 63, 94, 0.25) !important;
     }
 
-    /* Degraded Amber Row */
-    tr.row-degraded td {
-      background: rgba(245, 158, 11, 0.06) !important;
-      border-bottom: 1px solid rgba(245, 158, 11, 0.3) !important;
-    }
-
     .flash-pulse td {
       animation: flashRow 1s ease-out;
     }
@@ -618,7 +752,7 @@
 
     .target-title {
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
@@ -658,6 +792,12 @@
       animation: badgeUpBreathe 2s ease-in-out infinite;
     }
 
+    body.light-mode .badge-up {
+      background: rgba(5, 150, 105, 0.14);
+      color: #059669;
+      border-color: rgba(5, 150, 105, 0.45);
+    }
+
     @keyframes badgeUpBreathe {
       0%, 100% {
         box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
@@ -681,6 +821,12 @@
       animation: badgeDownAlert 1.2s ease-in-out infinite;
     }
 
+    body.light-mode .badge-down {
+      background: rgba(225, 29, 72, 0.15);
+      color: #e11d48;
+      border-color: rgba(225, 29, 72, 0.5);
+    }
+
     @keyframes badgeDownAlert {
       0%, 100% {
         transform: scale(1);
@@ -702,6 +848,12 @@
       animation: badgeDegradedPulse 1.8s ease-in-out infinite;
     }
 
+    body.light-mode .badge-degraded {
+      background: rgba(217, 119, 6, 0.14);
+      color: #d97706;
+      border-color: rgba(217, 119, 6, 0.45);
+    }
+
     @keyframes badgeDegradedPulse {
       0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.2); }
       50% { box-shadow: 0 0 18px rgba(245, 158, 11, 0.55); color: #fde68a; }
@@ -718,6 +870,11 @@
       background: #10b981;
       box-shadow: 0 0 10px #10b981;
       animation: dotPulseGreen 1.4s infinite;
+    }
+
+    body.light-mode .badge-dot.pulse-green {
+      background: #059669;
+      box-shadow: 0 0 10px #059669;
     }
 
     @keyframes dotPulseGreen {
@@ -766,23 +923,36 @@
     }
 
     .ssl-secure {
-      background: var(--success-bg);
+      background: rgba(16, 185, 129, 0.12);
       color: #34d399;
       border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
+    body.light-mode .ssl-secure {
+      background: rgba(5, 150, 105, 0.1);
+      color: #059669;
+      border-color: rgba(5, 150, 105, 0.3);
+    }
+
     .ssl-alert {
-      background: var(--warning-bg);
+      background: rgba(245, 158, 11, 0.14);
       color: #fbbf24;
       border: 1px solid rgba(245, 158, 11, 0.4);
     }
 
-    .ssl-plain {
-      color: #64748b;
-      font-size: 0.76rem;
+    body.light-mode .ssl-alert {
+      background: rgba(217, 119, 6, 0.12);
+      color: #d97706;
+      border-color: rgba(217, 119, 6, 0.4);
     }
 
-    /* History Blocks */
+    .ssl-plain {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    /* History Mini-Bar */
     .history-row {
       display: flex;
       align-items: center;
@@ -791,76 +961,151 @@
 
     .hist-block {
       width: 7px;
-      height: 22px;
+      height: 18px;
       border-radius: 2px;
-      cursor: pointer;
       transition: transform 0.15s;
     }
 
-    .hist-block:hover { transform: scaleY(1.35); }
+    .hist-block:hover {
+      transform: scaleY(1.4);
+    }
+
     .hist-up { background: var(--success); }
     .hist-degraded { background: var(--warning); }
-    .hist-down { background: var(--danger); }
+    .hist-down { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
     .hist-empty { background: rgba(255, 255, 255, 0.08); }
+    body.light-mode .hist-empty { background: rgba(0, 0, 0, 0.08); }
 
-    /* Action Buttons */
     .btn-act {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 0.45rem 0.75rem;
+      padding: 0.35rem 0.65rem;
       border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
     }
 
+    body.light-mode .btn-act {
+      background: #f1f5f9;
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
     .btn-act:hover {
-      background: rgba(255, 255, 255, 0.14);
-      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.15);
     }
 
-    .btn-act.del { color: #f87171; }
+    body.light-mode .btn-act:hover {
+      background: #e2e8f0;
+    }
+
     .btn-act.del:hover {
-      background: rgba(244, 63, 94, 0.2);
-      border-color: rgba(244, 63, 94, 0.4);
+      background: rgba(244, 63, 94, 0.25);
+      color: #fda4af;
+      border-color: var(--danger);
     }
 
-    /* Audit Stream View */
+    /* Live SRE Stream Card */
     .stream-card {
       background: var(--surface-1);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 1.5rem;
-      display: none;
+      margin-bottom: 2rem;
+      box-shadow: var(--card-shadow);
     }
 
     .stream-feed {
+      max-height: 480px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
-      max-height: 540px;
-      overflow-y: auto;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
+      padding-right: 0.5rem;
     }
 
     .log-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1rem;
-      background: rgba(6, 8, 14, 0.7);
-      border: 1px solid var(--border);
+      padding: 0.65rem 0.95rem;
       border-radius: 8px;
+      border-left: 4px solid #64748b;
+      background: rgba(0, 0, 0, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       gap: 1rem;
+      animation: fadeIn 0.25s ease-out;
     }
 
-    .log-item.success { border-left: 3px solid var(--success); }
-    .log-item.warning { border-left: 3px solid var(--warning); }
-    .log-item.danger { border-left: 3px solid var(--danger); }
-    .log-item.info { border-left: 3px solid var(--accent); }
+    body.light-mode .log-item {
+      background: #f8fafc;
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+
+    .log-item.success { border-left-color: var(--success); }
+    .log-item.warning { border-left-color: var(--warning); background: rgba(245, 158, 11, 0.08); }
+    .log-item.danger { border-left-color: var(--danger); background: rgba(244, 63, 94, 0.08); }
+    .log-item.info { border-left-color: var(--accent); }
+
+    /* CI/CD Pipeline Telemetry Card */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .pipeline-stage-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      position: relative;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pipeline-stage-card.passed {
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .stage-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.76rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stage-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .stage-status {
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: #34d399;
+    }
+
+    body.light-mode .stage-status {
+      color: #059669;
+    }
 
     /* Toast Notification */
     #toast {
@@ -869,43 +1114,53 @@
       right: 2rem;
       background: var(--surface-2);
       border: 1px solid var(--border);
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      color: var(--text);
+      padding: 0.85rem 1.3rem;
       border-radius: 12px;
-      padding: 1rem 1.4rem;
-      font-size: 0.9rem;
-      display: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
       align-items: center;
       gap: 0.75rem;
+      font-size: 0.88rem;
+      font-weight: 600;
       z-index: 9999;
-      animation: slideUp 0.25s ease-out;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
     }
 
     /* Footer */
     footer {
       margin-top: auto;
+      padding: 1.5rem 0;
       border-top: 1px solid var(--border);
-      padding: 1.5rem;
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
-      background: rgba(6, 8, 14, 0.8);
     }
 
     .build-badge {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       background: rgba(99, 102, 241, 0.15);
-      color: #a5b4fc;
       border: 1px solid rgba(99, 102, 241, 0.35);
-      padding: 0.25rem 0.6rem;
-      border-radius: 5px;
+      color: #a5b4fc;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      margin-left: 0.4rem;
+      font-size: 0.76rem;
+    }
+
+    body.light-mode .build-badge {
+      background: rgba(79, 70, 229, 0.1);
+      border-color: rgba(79, 70, 229, 0.3);
+      color: #4f46e5;
     }
   </style>
 </head>
@@ -926,138 +1181,109 @@
           <div class="live-dot"></div>
           <span id="countdownText">Refreshing in 10s</span>
         </div>
+        <button class="btn-top" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle between Dark and Light Mode">
+          <span id="themeIcon">☀️</span> <span id="themeLabel">Light Mode</span>
+        </button>
         <button class="btn-top" id="audioToggleBtn" onclick="toggleAudio()">
           <span id="audioIcon">🔇</span> Audio FX
         </button>
         <button class="btn-top" onclick="testDiscordWebhook()">
-          <span>🔔</span> Test Discord Alert
+          <span>🔔</span> Test Alert
         </button>
         <button class="btn-top" onclick="triggerFleetCheck()">
-          <span>⚡</span> Ping All Targets
+          <span>⚡</span> Ping Fleet
         </button>
       </div>
     </header>
 
-    <!-- Real Clinical ECG Heartbeat Telemetry Monitor -->
-    <div class="pulse-monitor-card" id="pulseMonitorCard">
-      <div class="pulse-monitor-header">
-        <div class="pulse-monitor-title">
-          <h2><span>❤️</span> Cardiac Pulse Telemetry</h2>
-          <div class="pulse-telemetry-badges">
-            <span class="telem-pill">LEAD II</span>
-            <span class="telem-pill">25 mm/s</span>
-            <span class="telem-pill">10 mm/mV</span>
-            <span class="telem-pill" id="rhythmBadge" style="color: #34d399; border-color: rgba(16, 185, 129, 0.4);">NORMAL SINUS</span>
-            <button class="telem-pill" id="colorThemeBtn" onclick="togglePulseColorTheme()" style="cursor: pointer; background: rgba(255, 255, 255, 0.08);" title="Toggle between Neon Emerald, Hospital Crimson Red, and Cyber Cyan">🎨 Style: <span id="pulseThemeName">Neon Emerald</span></button>
-          </div>
-        </div>
-        <div class="pulse-vitals">
-          <div class="vital-item">
-            <span class="vital-lbl">Telemetry Pulse</span>
-            <div class="vital-val" id="vitalBpmWrap" style="color: #34d399;">
-              <span class="heart-icon" id="heartBeatIcon">❤️</span>
-              <span id="vitalBpm">72</span>
-              <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">BPM</span>
-            </div>
-          </div>
-          <div class="vital-item">
-            <span class="vital-lbl">Fleet Condition</span>
-            <span class="vital-val" id="vitalCondition" style="font-size: 1.15rem; color: #34d399;">STABLE</span>
-          </div>
-        </div>
-      </div>
-      <div class="pulse-canvas-wrap">
-        <canvas id="pulseCanvas"></canvas>
-      </div>
-    </div>
-
-    <!-- KPI Summary Grid -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <span class="kpi-label">Active Monitors</span>
-        <span class="kpi-value blue" id="statTotal">0</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Operational (UP)</span>
-        <span class="kpi-value green" id="statUp">0</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Degraded (Content/Lag)</span>
-        <span class="kpi-value amber" id="statDegraded">0</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Active Outages</span>
-        <span class="kpi-value red" id="statDown">0</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Uptime SLA</span>
-        <span class="kpi-value green" id="statUptime">100%</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">Fleet Latency</span>
-        <span class="kpi-value purple" id="statLatency">0ms</span>
-      </div>
-    </div>
-
-    <!-- Live Interview Demo Playground -->
-    <div class="lab-banner">
-      <div class="lab-info">
-        <div class="lab-icon">⚡</div>
-        <div>
-          <div class="lab-title">Interactive SRE Demo Playground</div>
-          <div class="lab-desc">Instant 1-click presets to demonstrate every alert state live in presentations or interviews.</div>
-        </div>
-      </div>
-      <div class="lab-buttons">
-        <button class="btn-preset primary" onclick="triggerFleetCheck()">⚡ Ping All Targets</button>
-        <button class="btn-preset" onclick="addGooglePreset()">🌐 Add Google (SSL)</button>
-        <button class="btn-preset" onclick="addCloudflarePreset()">☁️ Add Cloudflare DNS</button>
-        <button class="btn-preset warning" onclick="addSilentFailPreset()">🕵️ Trigger 200 OK Mismatch</button>
-        <button class="btn-preset danger" onclick="toggleCrashSim()">🚨 Flip Outage (Crash/Recover)</button>
-      </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="nav-tabs">
-      <button class="tab-btn active" id="tabMonitorsBtn" onclick="switchTab('monitors')">
-        <span>📊</span> Fleet Monitors
+    <!-- Multi-Page Application Navigation Tabs -->
+    <nav class="app-nav-bar">
+      <button class="app-nav-item active" id="navFleetBtn" onclick="switchPage('fleet')">
+        <span>📊</span>
+        <span>Fleet Operations</span>
+        <span class="nav-badge" id="navFleetBadge">5</span>
       </button>
-      <button class="tab-btn" id="tabLogsBtn" onclick="switchTab('logs')">
-        <span>📜</span> Live SRE Audit Stream (<span id="eventCountBadge">0</span>)
+      <button class="app-nav-item" id="navLabBtn" onclick="switchPage('lab')">
+        <span>🧪</span>
+        <span>Chaos Lab & Provisioning</span>
       </button>
-    </div>
+      <button class="app-nav-item" id="navLogsBtn" onclick="switchPage('logs')">
+        <span>📜</span>
+        <span>Incident Stream</span>
+        <span class="nav-badge" id="navLogsBadge">0</span>
+      </button>
+      <button class="app-nav-item" id="navPipelineBtn" onclick="switchPage('pipeline')">
+        <span>🚀</span>
+        <span>CI/CD Pipeline Telemetry</span>
+      </button>
+    </nav>
 
-    <!-- Tab 1: Monitors View -->
-    <div id="monitorsView">
-      <!-- Add Service Form -->
-      <div class="add-card">
-        <div class="add-header">
-          <span>➕</span> Add New Target Endpoint
-        </div>
-        <form id="addServiceForm" onsubmit="handleAddService(event)">
-          <div class="form-grid">
-            <div class="input-group">
-              <label for="svcName">Target Name</label>
-              <input type="text" id="svcName" class="input-ctrl" placeholder="e.g. Stripe Webhook Gateway" required>
+    <!-- ========================================== -->
+    <!-- PAGE 1: FLEET OPERATIONS                   -->
+    <!-- ========================================== -->
+    <div id="pageFleet" class="page-view active">
+      <!-- Real Clinical ECG Heartbeat Telemetry Monitor -->
+      <div class="pulse-monitor-card" id="pulseMonitorCard">
+        <div class="pulse-monitor-header">
+          <div class="pulse-monitor-title">
+            <h2><span>❤️</span> Cardiac Pulse Telemetry</h2>
+            <div class="pulse-telemetry-badges">
+              <span class="telem-pill">LEAD II</span>
+              <span class="telem-pill">25 mm/s</span>
+              <span class="telem-pill">10 mm/mV</span>
+              <span class="telem-pill" id="rhythmBadge" style="color: #34d399; border-color: rgba(16, 185, 129, 0.4);">NORMAL SINUS</span>
+              <button class="telem-pill" id="colorThemeBtn" onclick="togglePulseColorTheme()" style="cursor: pointer;" title="Toggle trace color">🎨 Style: <span id="pulseThemeName">Neon Emerald</span></button>
             </div>
-            <div class="input-group">
-              <label for="svcUrl">URL Endpoint</label>
-              <input type="url" id="svcUrl" class="input-ctrl" placeholder="https://api.example.com/health" required>
-            </div>
-            <div class="input-group">
-              <label for="svcKeyword">Expected Keyword (Silent Failure Guard)</label>
-              <input type="text" id="svcKeyword" class="input-ctrl" placeholder="e.g. status or ok">
-            </div>
-            <div class="input-group">
-              <label for="svcLatency">Max Latency SLA (ms)</label>
-              <input type="number" id="svcLatency" class="input-ctrl" placeholder="e.g. 1500">
-            </div>
-            <button type="submit" class="btn-submit">Add Target</button>
           </div>
-        </form>
+          <div class="pulse-vitals">
+            <div class="vital-item">
+              <span class="vital-lbl">Telemetry Pulse</span>
+              <div class="vital-val" id="vitalBpmWrap" style="color: #34d399;">
+                <span class="heart-icon" id="heartBeatIcon">❤️</span>
+                <span id="vitalBpm">72</span>
+                <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">BPM</span>
+              </div>
+            </div>
+            <div class="vital-item">
+              <span class="vital-lbl">Fleet Condition</span>
+              <span class="vital-val" id="vitalCondition" style="font-size: 1.15rem; color: #34d399;">STABLE</span>
+            </div>
+          </div>
+        </div>
+        <div class="pulse-canvas-wrap">
+          <canvas id="pulseCanvas"></canvas>
+        </div>
       </div>
 
-      <!-- Services Table -->
+      <!-- KPI Summary Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-label">Active Monitors</span>
+          <span class="kpi-value blue" id="statTotal">0</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Operational (UP)</span>
+          <span class="kpi-value green" id="statUp">0</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Degraded (Content/Lag)</span>
+          <span class="kpi-value amber" id="statDegraded">0</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Active Outages</span>
+          <span class="kpi-value red" id="statDown">0</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Uptime SLA</span>
+          <span class="kpi-value green" id="statUptime">100%</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Fleet Latency</span>
+          <span class="kpi-value purple" id="statLatency">0ms</span>
+        </div>
+      </div>
+
+      <!-- Fleet Monitors Table -->
       <div class="table-card">
         <table>
           <thead>
@@ -1080,14 +1306,142 @@
       </div>
     </div>
 
-    <!-- Tab 2: Live SRE Stream View -->
-    <div id="logsView" class="stream-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-        <h3 style="font-size: 1.05rem; font-weight: 700;">📡 Real-time Operational Event Stream</h3>
-        <span style="font-size: 0.8rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Live audit buffer (Last 60 events)</span>
+    <!-- ========================================== -->
+    <!-- PAGE 2: CHAOS LAB & PROVISIONING           -->
+    <!-- ========================================== -->
+    <div id="pageLab" class="page-view">
+      <!-- Chaos Action Playground -->
+      <div class="lab-banner">
+        <div class="lab-info">
+          <div class="lab-icon">⚡</div>
+          <div>
+            <div class="lab-title">Interactive Chaos Engineering Playground</div>
+            <div class="lab-desc">Instant 1-click presets to trigger live outages, test silent 200 OK failures, and fire webhook alerts.</div>
+          </div>
+        </div>
+        <div class="lab-buttons">
+          <button class="btn-preset primary" onclick="triggerFleetCheck()">⚡ Ping All Targets</button>
+          <button class="btn-preset" onclick="addGooglePreset()">🌐 Add Google (SSL)</button>
+          <button class="btn-preset" onclick="addCloudflarePreset()">☁️ Add Cloudflare DNS</button>
+          <button class="btn-preset warning" onclick="addSilentFailPreset()">🕵️ Trigger 200 OK Mismatch</button>
+          <button class="btn-preset danger" onclick="toggleCrashSim()">🚨 Flip Outage (Crash/Recover)</button>
+        </div>
       </div>
-      <div class="stream-feed" id="eventStreamContainer">
-        <div style="color: var(--text-muted); text-align: center; padding: 2rem;">Connecting to SRE event stream...</div>
+
+      <!-- Provision New Target Form -->
+      <div class="add-card">
+        <div class="add-header">
+          <span>➕</span> Provision New Sentinel Target
+        </div>
+        <form id="addServiceForm" onsubmit="handleAddService(event)">
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="svcName">Target Name</label>
+              <input type="text" id="svcName" class="input-ctrl" placeholder="e.g. Stripe Payment Gateway" required>
+            </div>
+            <div class="input-group">
+              <label for="svcUrl">URL Endpoint</label>
+              <input type="url" id="svcUrl" class="input-ctrl" placeholder="https://api.example.com/health" required>
+            </div>
+            <div class="input-group">
+              <label for="svcKeyword">Expected Keyword (Silent 200 OK Guard)</label>
+              <input type="text" id="svcKeyword" class="input-ctrl" placeholder="e.g. status or operational">
+            </div>
+            <div class="input-group">
+              <label for="svcLatency">Max Latency SLA (ms)</label>
+              <input type="number" id="svcLatency" class="input-ctrl" placeholder="e.g. 1500">
+            </div>
+            <button type="submit" class="btn-submit">Deploy Sentinel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE 3: INCIDENT AUDIT STREAM              -->
+    <!-- ========================================== -->
+    <div id="pageLogs" class="page-view">
+      <div class="stream-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text);">📡 Real-time SRE Incident Audit Stream</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Immutable rolling event ledger (Last 60 events)</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn-act" onclick="fetchData()">🔄 Refresh Stream</button>
+          </div>
+        </div>
+        <div class="stream-feed" id="eventStreamContainer">
+          <div style="color: var(--text-muted); text-align: center; padding: 2rem;">Connecting to SRE event stream...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PAGE 4: CI/CD PIPELINE TELEMETRY           -->
+    <!-- ========================================== -->
+    <div id="pagePipeline" class="page-view">
+      <div class="stream-card" style="margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text);">🚀 Jenkins Declarative CI/CD Pipeline Stages</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">Automated Git push trigger ➔ Docker container build ➔ Live zero-downtime sibling deployment.</p>
+
+        <div class="pipeline-grid">
+          <div class="pipeline-stage-card passed">
+            <div class="stage-num">1</div>
+            <div class="stage-title">Checkout</div>
+            <div class="stage-status">✓ PASSED</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">GitHub main</span>
+          </div>
+          <div class="pipeline-stage-card passed">
+            <div class="stage-num">2</div>
+            <div class="stage-title">Test</div>
+            <div class="stage-status">✓ 9 PASSED</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Jest + Supertest</span>
+          </div>
+          <div class="pipeline-stage-card passed">
+            <div class="stage-num">3</div>
+            <div class="stage-title">Build Image</div>
+            <div class="stage-status">✓ COMPILED</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Alpine Node 18</span>
+          </div>
+          <div class="pipeline-stage-card passed">
+            <div class="stage-num">4</div>
+            <div class="stage-title">Push Image</div>
+            <div class="stage-status">✓ PUSHED</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Docker Hub</span>
+          </div>
+          <div class="pipeline-stage-card passed">
+            <div class="stage-num">5</div>
+            <div class="stage-title">Deploy</div>
+            <div class="stage-status">✓ LIVE</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Port 3000</span>
+          </div>
+          <div class="pipeline-stage-card passed">
+            <div class="stage-num">6</div>
+            <div class="stage-title">Verify</div>
+            <div class="stage-status">✓ 200 OK</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">/health curl check</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-label">Active Image</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: var(--accent);">sanjayr8dev/uptime-monitor:latest</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Deployment Architecture</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: var(--success);">Docker Socket (Sibling Containers)</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Jenkins Orchestrator</span>
+          <a href="http://localhost:8080" target="_blank" style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: #a5b4fc; text-decoration: underline;">http://localhost:8080</a>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Source Repository</span>
+          <a href="https://github.com/SanjayR-dev/PulseOps" target="_blank" style="font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700; color: #a5b4fc; text-decoration: underline;">SanjayR-dev/PulseOps</a>
+        </div>
       </div>
     </div>
 
@@ -1108,9 +1462,66 @@
   <script>
     let countdown = 10;
     let countdownTimer = null;
-    let activeTab = 'monitors';
     let audioEnabled = false;
     let audioCtx = null;
+    let currentFleetStatus = 'HEALTHY'; // 'HEALTHY' | 'DEGRADED' | 'DOWN'
+    let pulseTheme = 'emerald'; // 'emerald' | 'red' | 'cyan'
+    let lastPeakTime = 0;
+
+    // Theme Switcher (Dark Mode / Light Mode)
+    function initTheme() {
+      const saved = localStorage.getItem('sentinel_theme');
+      if (saved === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('themeIcon').innerText = '🌙';
+        document.getElementById('themeLabel').innerText = 'Dark Mode';
+        pulseTheme = 'red'; // Default light mode to authentic hospital red ECG trace
+        document.getElementById('pulseThemeName').innerText = 'Hospital Red';
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-mode');
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (isLight) {
+        icon.innerText = '🌙';
+        label.innerText = 'Dark Mode';
+        localStorage.setItem('sentinel_theme', 'light');
+        pulseTheme = 'red';
+        document.getElementById('pulseThemeName').innerText = 'Hospital Red';
+        showToast('☀️', 'Switched to Clinical Light Mode');
+      } else {
+        icon.innerText = '☀️';
+        label.innerText = 'Light Mode';
+        localStorage.setItem('sentinel_theme', 'dark');
+        pulseTheme = 'emerald';
+        document.getElementById('pulseThemeName').innerText = 'Neon Emerald';
+        showToast('🌙', 'Switched to Cyberpunk Dark Mode');
+      }
+      resizePulseCanvas();
+    }
+
+    // Page Switching (Multi-Page SPA Router)
+    function switchPage(pageId) {
+      document.querySelectorAll('.app-nav-item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+
+      if (pageId === 'fleet') {
+        document.getElementById('navFleetBtn').classList.add('active');
+        document.getElementById('pageFleet').classList.add('active');
+        setTimeout(resizePulseCanvas, 50);
+      } else if (pageId === 'lab') {
+        document.getElementById('navLabBtn').classList.add('active');
+        document.getElementById('pageLab').classList.add('active');
+      } else if (pageId === 'logs') {
+        document.getElementById('navLogsBtn').classList.add('active');
+        document.getElementById('pageLogs').classList.add('active');
+      } else if (pageId === 'pipeline') {
+        document.getElementById('navPipelineBtn').classList.add('active');
+        document.getElementById('pagePipeline').classList.add('active');
+      }
+    }
 
     // Web Audio Synthesizer (Zero External Dependencies)
     function playBeep(type) {
@@ -1170,9 +1581,6 @@
     let pulseBuffer = [];
     let sweepCursor = 0;
     let lastTimestamp = 0;
-    let currentFleetStatus = 'HEALTHY'; // 'HEALTHY' | 'DEGRADED' | 'DOWN'
-    let pulseTheme = 'emerald'; // 'emerald' | 'red' | 'cyan'
-    let lastPeakTime = 0;
 
     const pulseThemes = {
       emerald: {
@@ -1207,6 +1615,7 @@
     }
 
     function resizePulseCanvas() {
+      if (!pulseCanvas || !pulseCanvas.parentElement) return;
       pulseCanvas.width = pulseCanvas.parentElement.clientWidth;
       pulseCanvas.height = pulseCanvas.parentElement.clientHeight;
       if (pulseBuffer.length !== pulseCanvas.width) {
@@ -1215,44 +1624,34 @@
       }
     }
     window.addEventListener('resize', resizePulseCanvas);
-    resizePulseCanvas();
 
-    // Authentic P-Q-R-S-T Cardiac Deflection Formula (Exactly matches real EKG)
+    // Authentic P-Q-R-S-T Cardiac Deflection Formula (Matches user medical reference)
     function getEcgDeflection(phase) {
       const p = phase % 1;
-      // 0.00 - 0.16 : Isoelectric Baseline
       if (p < 0.16) return 0;
-      // 0.16 - 0.26 : P Wave (gentle atrial depolarization dome)
       if (p < 0.26) {
         const x = (p - 0.16) / 0.10;
-        return Math.sin(x * Math.PI) * 0.18;
+        return Math.sin(x * Math.PI) * 0.18; // P Wave
       }
-      // 0.26 - 0.33 : PR Segment (baseline)
-      if (p < 0.33) return 0;
-      // 0.33 - 0.36 : Q Wave (sharp downward septal dip)
+      if (p < 0.33) return 0; // PR Segment
       if (p < 0.36) {
         const x = (p - 0.33) / 0.03;
-        return -Math.sin(x * Math.PI) * 0.25;
+        return -Math.sin(x * Math.PI) * 0.25; // Q Wave dip
       }
-      // 0.36 - 0.41 : R Wave (TALL sharp upward ventricular spike!)
       if (p < 0.41) {
         const x = (p - 0.36) / 0.05;
-        return Math.sin(x * Math.PI) * 1.0;
+        return Math.sin(x * Math.PI) * 1.0; // R Wave TALL spike!
       }
-      // 0.41 - 0.46 : S Wave (sharp downward dip below baseline)
       if (p < 0.46) {
         const x = (p - 0.41) / 0.05;
-        return -Math.sin(x * Math.PI) * 0.50;
+        return -Math.sin(x * Math.PI) * 0.50; // S Wave dip
       }
-      // 0.46 - 0.53 : ST Segment (baseline)
-      if (p < 0.53) return 0;
-      // 0.53 - 0.69 : T Wave (smooth upward ventricular repolarization dome)
+      if (p < 0.53) return 0; // ST Segment
       if (p < 0.69) {
         const x = (p - 0.53) / 0.16;
-        return Math.sin(x * Math.PI) * 0.28;
+        return Math.sin(x * Math.PI) * 0.28; // T Wave
       }
-      // 0.69 - 1.00 : Resting baseline interval before next beat
-      return 0;
+      return 0; // Baseline
     }
 
     // Clinical Hospital Monitor Audio Beep (880 Hz pure sine chirp on R-wave peak)
@@ -1289,13 +1688,14 @@
       const h = pulseCanvas.height;
       const cy = h / 2;
       const amplitude = (h / 2) * 0.82;
+      const isLight = document.body.classList.contains('light-mode');
 
       // Exactly 4 heartbeat complexes across screen width (matches user reference image!)
       const beatWidth = Math.max(140, Math.floor(w / 4));
 
       // Calculate sweep speed (pixels per second)
       let sweepSpeed = 220;
-      if (currentFleetStatus === 'DEGRADED') sweepSpeed = 310; // Tachycardia
+      if (currentFleetStatus === 'DEGRADED') sweepSpeed = 310;
       const advance = Math.max(1, (sweepSpeed * dt) / 1000);
 
       const prevCursor = Math.floor(sweepCursor);
@@ -1313,10 +1713,8 @@
           // Real hospital FLATLINE with subtle analog tremor
           deflection = (Math.random() - 0.5) * 0.035;
         } else if (currentFleetStatus === 'DEGRADED') {
-          // Arrhythmia: accelerated ectopic deflection
           deflection = getEcgDeflection((phase * 1.3) % 1);
         } else {
-          // Normal Sinus Rhythm (P-Q-R-S-T)
           deflection = getEcgDeflection(phase);
         }
 
@@ -1345,27 +1743,44 @@
 
       // Determine active color theme
       let theme = pulseThemes[pulseTheme];
-      if (currentFleetStatus === 'DOWN') {
-        theme = pulseThemes['red']; // Always alarming crimson red when down/flatline!
-      } else if (currentFleetStatus === 'DEGRADED') {
-        theme = {
-          line: '#f59e0b',
-          glow: 'rgba(245, 158, 11, 0.45)',
-          gridMajor: 'rgba(245, 158, 11, 0.12)',
-          gridMinor: 'rgba(245, 158, 11, 0.04)'
-        };
+      if (isLight) {
+        // Light mode styling: hospital white background with red or green trace
+        if (pulseTheme === 'red' || currentFleetStatus === 'DOWN') {
+          theme = {
+            line: '#e11d48',
+            glow: 'rgba(225, 29, 72, 0.4)',
+            gridMajor: 'rgba(2, 132, 199, 0.16)',
+            gridMinor: 'rgba(2, 132, 199, 0.06)'
+          };
+        } else {
+          theme = {
+            line: '#059669',
+            glow: 'rgba(5, 150, 105, 0.35)',
+            gridMajor: 'rgba(2, 132, 199, 0.16)',
+            gridMinor: 'rgba(2, 132, 199, 0.06)'
+          };
+        }
+      } else {
+        if (currentFleetStatus === 'DOWN') {
+          theme = pulseThemes['red'];
+        } else if (currentFleetStatus === 'DEGRADED') {
+          theme = {
+            line: '#f59e0b',
+            glow: 'rgba(245, 158, 11, 0.45)',
+            gridMajor: 'rgba(245, 158, 11, 0.12)',
+            gridMinor: 'rgba(245, 158, 11, 0.04)'
+          };
+        }
       }
 
       // Draw Medical ECG Grid Lines
       pulseCtx.lineWidth = 1;
-      // Minor Grid (8px)
       pulseCtx.strokeStyle = theme.gridMinor;
       pulseCtx.beginPath();
       for (let x = 0; x < w; x += 8) { pulseCtx.moveTo(x, 0); pulseCtx.lineTo(x, h); }
       for (let y = 0; y < h; y += 8) { pulseCtx.moveTo(0, y); pulseCtx.lineTo(w, y); }
       pulseCtx.stroke();
 
-      // Major Grid (40px)
       pulseCtx.strokeStyle = theme.gridMajor;
       pulseCtx.beginPath();
       for (let x = 0; x < w; x += 40) { pulseCtx.moveTo(x, 0); pulseCtx.lineTo(x, h); }
@@ -1412,11 +1827,11 @@
       // Outer halo
       pulseCtx.fillStyle = theme.glow;
       pulseCtx.beginPath();
-      pulseCtx.arc(headX, leadY, 8, 0, Math.PI * 2);
+      pulseCtx.arc(headX, leadY, 7.5, 0, Math.PI * 2);
       pulseCtx.fill();
 
       // Inner intense core
-      pulseCtx.fillStyle = '#ffffff';
+      pulseCtx.fillStyle = isLight ? theme.line : '#ffffff';
       pulseCtx.beginPath();
       pulseCtx.arc(headX, leadY, 3, 0, Math.PI * 2);
       pulseCtx.fill();
@@ -1425,7 +1840,6 @@
 
       requestAnimationFrame(animatePulse);
     }
-    requestAnimationFrame(animatePulse);
 
     // Data Fetching & Sync
     async function fetchData(triggerFlashId = null) {
@@ -1460,6 +1874,7 @@
       document.getElementById('statUptime').innerText = summary.uptimePercent + '%';
       document.getElementById('statLatency').innerText = summary.avgLatencyMs + 'ms';
       document.getElementById('buildNumberTag').innerText = '#' + (summary.buildNumber || 'local');
+      document.getElementById('navFleetBadge').innerText = summary.total;
 
       const card = document.getElementById('pulseMonitorCard');
       const rhythmBadge = document.getElementById('rhythmBadge');
@@ -1479,7 +1894,7 @@
         if (vitalBpmWrap) vitalBpmWrap.style.color = '#f87171';
         if (vitalBpm) vitalBpm.innerText = '00';
         if (vitalCondition) {
-          vitalCondition.innerText = 'ASYSTOLE (OUTAGE)';
+          vitalCondition.innerText = `${summary.down} CRITICAL OUTAGE`;
           vitalCondition.style.color = '#f87171';
         }
         if (heartIcon) heartIcon.innerText = '💔';
@@ -1519,7 +1934,7 @@
     function renderTable(services, flashId = null) {
       const tbody = document.getElementById('servicesTableBody');
       if (services.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No monitored targets. Click any preset above or add one!</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No monitored targets. Click Chaos Lab & Provisioning above to add one!</td></tr>`;
         return;
       }
 
@@ -1577,7 +1992,7 @@
             </td>
             <td>${statusBadge}</td>
             <td>${sslTag}</td>
-            <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.9rem; color: #fff;">${s.responseTimeMs}ms</td>
+            <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.9rem;">${s.responseTimeMs}ms</td>
             <td><div class="history-row">${historyBars.join('')}</div></td>
             <td style="color: var(--text-muted); font-size: 0.8rem;">${timeAgo}</td>
             <td>
@@ -1592,7 +2007,7 @@
     }
 
     function renderEvents(events) {
-      document.getElementById('eventCountBadge').innerText = events.length;
+      document.getElementById('navLogsBadge').innerText = events.length;
       const container = document.getElementById('eventStreamContainer');
       if (events.length === 0) {
         container.innerHTML = `<div style="color: var(--text-muted); text-align: center; padding: 2rem;">No events recorded yet. Checks will appear here automatically!</div>`;
@@ -1602,28 +2017,13 @@
       container.innerHTML = events.map(e => `
         <div class="log-item ${e.severity}">
           <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <span style="font-weight: 700; color: #fff;">[${escapeHtml(e.type)}]</span>
+            <span style="font-weight: 700;">[${escapeHtml(e.type)}]</span>
             <span style="color: var(--accent); font-weight: 600;">${escapeHtml(e.serviceName)}:</span>
-            <span style="color: var(--text);">${escapeHtml(e.message)}</span>
+            <span>${escapeHtml(e.message)}</span>
           </div>
           <span style="color: var(--text-muted); font-size: 0.75rem; white-space: nowrap;">${new Date(e.time).toLocaleTimeString()}</span>
         </div>
       `).join('');
-    }
-
-    function switchTab(tab) {
-      activeTab = tab;
-      if (tab === 'monitors') {
-        document.getElementById('monitorsView').style.display = 'block';
-        document.getElementById('logsView').style.display = 'none';
-        document.getElementById('tabMonitorsBtn').classList.add('active');
-        document.getElementById('tabLogsBtn').classList.remove('active');
-      } else {
-        document.getElementById('monitorsView').style.display = 'none';
-        document.getElementById('logsView').style.display = 'block';
-        document.getElementById('tabMonitorsBtn').classList.remove('active');
-        document.getElementById('tabLogsBtn').classList.add('active');
-      }
     }
 
     async function handleAddService(event) {
@@ -1643,9 +2043,10 @@
         if (res.ok) {
           const newSvc = await res.json();
           document.getElementById('addServiceForm').reset();
-          showToast('✅', `Added "${name}" to fleet`);
+          showToast('✅', `Provisioned "${name}" successfully`);
           playBeep('success');
           fetchData(newSvc.id);
+          switchPage('fleet'); // Return to fleet page to see new monitor!
         } else {
           const err = await res.json();
           showToast('❌', err.error || 'Failed to add target');
@@ -1708,6 +2109,7 @@
       showToast('🌐', 'Added Google with SSL Watchdog');
       playBeep('success');
       fetchData();
+      switchPage('fleet');
     }
 
     async function addCloudflarePreset() {
@@ -1722,6 +2124,7 @@
       showToast('☁️', 'Added Cloudflare DNS with SSL Watchdog');
       playBeep('success');
       fetchData();
+      switchPage('fleet');
     }
 
     async function addSilentFailPreset() {
@@ -1734,9 +2137,10 @@
           expectedKeyword: 'PAYMENT_SUCCESS'
         })
       });
-      showToast('🕵️', 'Added Silent Mismatch Target (200 OK missing expected keyword)');
+      showToast('🕵️', 'Added Silent Mismatch Target (200 OK missing keyword)');
       playBeep('warning');
       fetchData();
+      switchPage('fleet');
     }
 
     async function toggleCrashSim() {
@@ -1747,7 +2151,6 @@
         if (data.mockHealthy) playBeep('success');
         else playBeep('danger');
         
-        // Find mock target and check it immediately
         const sRes = await fetch('/api/services');
         const svcs = await sRes.json();
         const mockSvc = svcs.find(s => s.url.includes('/api/mock/target'));
@@ -1765,7 +2168,7 @@
         showToast('🔔', 'Sending test payload to Discord/Slack...');
         const res = await fetch('/api/webhook/test', { method: 'POST' });
         const data = await res.json();
-        if (res.ok) {
+        if (res.ok && data.success) {
           showToast('✅', 'Discord test card fired successfully!');
           playBeep('success');
         } else {
@@ -1781,13 +2184,13 @@
       const toast = document.getElementById('toast');
       document.getElementById('toastIcon').innerText = icon;
       document.getElementById('toastMsg').innerText = msg;
-      toast.style.display = 'flex';
-      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
     }
 
     function formatTimeAgo(date) {
       const sec = Math.floor((new Date() - date) / 1000);
-      if (sec < 5) return 'Just now';
+      if (sec < 5) return 'just now';
       if (sec < 60) return `${sec}s ago`;
       const min = Math.floor(sec / 60);
       if (min < 60) return `${min}m ago`;
@@ -1796,24 +2199,37 @@
 
     function escapeHtml(str) {
       if (!str) return '';
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
 
+    // Auto-refresh timer loop
     function startCountdown() {
       countdown = 10;
-      if (countdownTimer) clearInterval(countdownTimer);
+      clearInterval(countdownTimer);
       countdownTimer = setInterval(() => {
         countdown--;
+        const el = document.getElementById('countdownText');
+        if (el) el.innerText = `Refreshing in ${countdown}s`;
         if (countdown <= 0) {
-          fetchData();
           countdown = 10;
+          fetchData();
         }
-        document.getElementById('countdownText').innerText = `Refreshing in ${countdown}s`;
       }, 1000);
     }
 
-    fetchData();
-    startCountdown();
+    // Boot Sequence
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      resizePulseCanvas();
+      fetchData();
+      startCountdown();
+      requestAnimationFrame(animatePulse);
+    });
   </script>
 </body>
 </html>
