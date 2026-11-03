@@ -16,7 +16,7 @@ function seedDefaults() {
     services.push({
       id: 'svc_self_health',
       name: 'Self Health Check',
-      url: 'http://localhost:3000/health',
+      url: 'http://127.0.0.1:3000/health',
       expectedKeyword: 'status',
       maxLatencyMs: 1000,
       status: 'PENDING',
@@ -173,12 +173,28 @@ async function checkService(service, customAlertSender = sendWebhookAlert) {
   let reason = 'Unknown error';
   let responseTimeMs = 0;
 
+  let targetUrl = service.url;
   try {
-    const res = await fetch(service.url, {
-      signal: AbortSignal.timeout(5000),
-      redirect: 'follow',
-      headers: { 'User-Agent': 'PulseOps-Sentinel/1.0' }
-    });
+    let res;
+    try {
+      res = await fetch(targetUrl, {
+        signal: AbortSignal.timeout(5000),
+        redirect: 'follow',
+        headers: { 'User-Agent': 'PulseOps-Sentinel/1.0' }
+      });
+    } catch (fetchErr) {
+      // IPv6/IPv4 fallback: if localhost failed with connection error, attempt 127.0.0.1
+      if (targetUrl.includes('localhost')) {
+        const fallbackUrl = targetUrl.replace('localhost', '127.0.0.1');
+        res = await fetch(fallbackUrl, {
+          signal: AbortSignal.timeout(5000),
+          redirect: 'follow',
+          headers: { 'User-Agent': 'PulseOps-Sentinel/1.0' }
+        });
+      } else {
+        throw fetchErr;
+      }
+    }
 
     responseTimeMs = Date.now() - startTime;
 

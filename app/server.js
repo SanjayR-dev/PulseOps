@@ -110,10 +110,10 @@ app.post('/api/mock/toggle', (req, res) => {
 // Start listening if run directly
 if (require.main === module) {
   checker.seedDefaults();
-  checker.startChecker();
 
-  app.listen(PORT, '0.0.0.0', () => {
+  app.listen(PORT, () => {
     console.log(`PulseOps Sentinel running on port ${PORT} (Build #${BUILD_NUMBER})`);
+    checker.startChecker();
   });
 }
 
